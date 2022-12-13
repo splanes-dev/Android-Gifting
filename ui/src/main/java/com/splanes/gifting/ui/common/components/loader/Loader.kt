@@ -36,10 +36,7 @@ import com.splanes.gifting.ui.theme.GiftingTheme
 import kotlinx.coroutines.launch
 
 @Composable
-fun Loader(
-    state: LoaderState,
-    modifier: Modifier = Modifier
-) {
+fun Loader(state: LoaderState, modifier: Modifier = Modifier) {
     AnimatedVisibility(
         visible = state.visuals != null,
         enter = fadeIn(animationSpec = tween(FADE_IN_MILLIS)),
