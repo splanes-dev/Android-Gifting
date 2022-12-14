@@ -19,11 +19,14 @@ class TextInputState(initial: String) {
         inputValue = TextInputValue.Normal(text)
     }
 
+    suspend fun clear() = onChange("")
+
     suspend fun validate(validators: List<TextInputValidator>) = mutex.withLock {
-        val validatorFailed = validators.find { v -> v.isValid(inputValue.text.orEmpty()) }
+        val validatorFailed = validators.find { v -> !v.isValid(inputValue.text.orEmpty()) }
         inputValue = validatorFailed?.let { failed ->
             TextInputValue.Error(inputValue.text, failed.error)
         } ?: TextInputValue.Normal(inputValue.text.orEmpty())
+        inputValue !is TextInputValue.Error
     }
 }
 
