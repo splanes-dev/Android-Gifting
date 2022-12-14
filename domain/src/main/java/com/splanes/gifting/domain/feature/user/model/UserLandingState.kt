@@ -11,8 +11,8 @@ sealed class UserLandingState : Parcelable {
     object SignUp : UserLandingState()
 
     @Parcelize
-    data class AutoSignIn(val username: String) : UserLandingState()
+    data class AutoSignIn(val email: String, val password: String) : UserLandingState()
 
     @Parcelize
-    data class SignIn(val username: String?) : UserLandingState()
+    data class SignIn(val email: String) : UserLandingState()
 }
