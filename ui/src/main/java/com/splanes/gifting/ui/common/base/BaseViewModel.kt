@@ -15,12 +15,12 @@ import kotlinx.coroutines.launch
 
 abstract class BaseViewModel : ViewModel() {
 
-    private val loading: MutableStateFlow<UiState.Loading?> = MutableStateFlow(null)
+    protected val loading: MutableStateFlow<UiState.Loading?> = MutableStateFlow(null)
     val loadingState: State<UiState.Loading?>
         @Composable
         get() = loading.collectAsState()
 
-    private val error: MutableStateFlow<UiState.Error?> = MutableStateFlow(null)
+    protected val error: MutableStateFlow<UiState.Error?> = MutableStateFlow(null)
     val errorState: State<UiState.Error?>
         @Composable
         get() = error.collectAsState()
