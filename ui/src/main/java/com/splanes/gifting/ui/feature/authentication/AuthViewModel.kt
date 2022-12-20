@@ -1,5 +1,6 @@
 package com.splanes.gifting.ui.feature.authentication
 
+import androidx.lifecycle.viewModelScope
 import com.splanes.gifting.domain.common.base.usecase.UseCase
 import com.splanes.gifting.domain.feature.user.model.AuthStateValue
 import com.splanes.gifting.domain.feature.user.usecase.GetAuthStateUseCase
@@ -12,6 +13,7 @@ import com.splanes.gifting.ui.feature.authentication.model.OnBoardingUiPages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 
 data class AuthUiViewModelState(
     private val error: ErrorVisuals = ErrorVisuals.Empty,
@@ -69,26 +71,28 @@ class AuthViewModel @Inject constructor(
     init {
         launch {
             getAuthState().collect { result ->
-                viewModelState.update { state ->
-                    when (result) {
-                        is UseCase.Failure -> {
-                            state.copy(
-                                loading = LoadingVisuals(visible = false)
-                                // error = ErrorVisuals(TODO)
-                            )
-                        }
+                withContext(viewModelScope.coroutineContext) {
+                    viewModelState.update { state ->
+                        when (result) {
+                            is UseCase.Failure -> {
+                                state.copy(
+                                    loading = LoadingVisuals(visible = false)
+                                    // error = ErrorVisuals(TODO)
+                                )
+                            }
 
-                        is UseCase.Success -> {
-                            state.copy(
-                                loading = LoadingVisuals(visible = false),
-                                isSignedUp = result.data.isSignedUp(),
-                                autoSignIn = result.data == AuthStateValue.AutoSignIn,
-                                onBoardingPages = if (result.data == AuthStateValue.OnBoarding) {
-                                    OnBoardingUiPages().toList()
-                                } else {
-                                    emptyList()
-                                }
-                            )
+                            is UseCase.Success -> {
+                                state.copy(
+                                    loading = LoadingVisuals(visible = false),
+                                    isSignedUp = result.data.isSignedUp(),
+                                    autoSignIn = result.data == AuthStateValue.AutoSignIn,
+                                    onBoardingPages = if (result.data == AuthStateValue.OnBoarding) {
+                                        OnBoardingUiPages().toList()
+                                    } else {
+                                        emptyList()
+                                    }
+                                )
+                            }
                         }
                     }
                 }

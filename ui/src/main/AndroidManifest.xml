@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name="com.splanes.gifting.ui.feature.landing.LandingActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Gifting.SplashScreen">
             <intent-filter>

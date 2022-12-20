@@ -1,19 +1,19 @@
 package com.splanes.gifting.ui
 
-import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import androidx.navigation.compose.rememberNavController
 import com.splanes.gifting.ui.theme.GiftingTheme
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun GiftingApp() {
     GiftingTheme {
-        val navController = rememberAnimatedNavController()
+        val navController = rememberNavController()
         val navActions = remember(navController) {
             GiftingNavigationActions(navController)
         }
@@ -24,6 +24,7 @@ fun GiftingApp() {
             navBackStackEntry?.destination?.route ?: GiftingDestinations.Authentication
 
         GiftingNavGraph(
+            modifier = Modifier.fillMaxSize(),
             navController = navController,
             navActions = navActions
         )

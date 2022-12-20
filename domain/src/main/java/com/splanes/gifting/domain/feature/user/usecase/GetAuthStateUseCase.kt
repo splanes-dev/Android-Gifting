@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetAuthStateUseCase @Inject constructor() : UseCase<Unit, AuthStateValue>() {
 
     override suspend fun UseCaseScope<AuthStateValue>.execute(request: Unit) {
-        TODO("Not yet implemented")
+        emitSuccess(AuthStateValue.OnBoarding)
     }
 }
