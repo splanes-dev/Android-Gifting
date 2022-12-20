@@ -6,5 +6,5 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.TextStyle
 
 @Composable
-inline fun textStyleOf(crossinline block: Typography.() -> TextStyle) =
+inline fun textStyleOf(block: Typography.() -> TextStyle) =
     MaterialTheme.typography.block()
