@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome_page_title">Welcome!</string>
+    <string name="welcome_page_description">
+        This is Gifting, your perfect app for manage your gift lists!\n
+        Let\'s take a quick look and discover what may do for you :)
+    </string>
+    <string name="sync_page_title">Sync with everybody</string>
+    <string name="sync_page_description">
+        Make your list, share it with everyone you want and let them be in sync
+    </string>
+    <string name="private_lists_page_title">Wishlists</string>
+    <string name="private_lists_page_description">
+        Write your wishlists and never forget all those gifts you want to receive
+    </string>
+    <string name="other_features_page_title">Much more</string>
+    <string name="other_features_page_description">
+        There is such a lot of amazing features waiting for you, do not hesitate and let\'s go!
+    </string>
+</resources>

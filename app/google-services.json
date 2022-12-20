@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "292792450381",
+    "project_id": "gifting-caf5f",
+    "storage_bucket": "gifting-caf5f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:292792450381:android:56a996832ffea6be210b04",
+        "android_client_info": {
+          "package_name": "com.splanes.gifting"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "292792450381-a45o2j06174h3s2du6hc0ea1e1qq0b22.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm7koSoJDKyi8oFpNnIPLIoauYZ-gPmeY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "292792450381-a45o2j06174h3s2du6hc0ea1e1qq0b22.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
