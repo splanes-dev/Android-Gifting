@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -22,6 +23,10 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.splanes.gifting.ui.R
+import com.splanes.gifting.ui.common.components.loader.Loader
+import com.splanes.gifting.ui.common.components.loader.LoaderScaffold
+import com.splanes.gifting.ui.common.components.loader.LoaderVisuals
+import com.splanes.gifting.ui.common.components.loader.rememberLoaderState
 import com.splanes.gifting.ui.common.components.spacer.column.Spacer
 import com.splanes.gifting.ui.common.components.spacer.column.Weight
 import com.splanes.gifting.ui.common.uistate.ErrorVisuals
@@ -31,6 +36,7 @@ import com.splanes.gifting.ui.common.utils.color.withAlpha
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
 import com.splanes.gifting.ui.feature.authentication.components.OnBoardingPageContent
 import com.splanes.gifting.ui.feature.authentication.components.OnBoardingPagerProgress
+import com.splanes.gifting.ui.feature.authentication.components.SignInForm
 import com.splanes.gifting.ui.feature.authentication.components.SignUpForm
 import com.splanes.gifting.ui.feature.authentication.model.OnBoardingUiPages
 import com.splanes.gifting.ui.theme.GiftingTheme
@@ -40,43 +46,94 @@ fun AuthSignUpScreen(
     uiState: AuthUiState.SignUp,
     onSignUp: (String, String, String, Boolean) -> Unit
 ) {
-    Column(
-        modifier = Modifier
-            .scrollable(
-                state = rememberScrollState(),
-                orientation = Orientation.Vertical
+    LoaderScaffold(uiState = uiState) {
+        Column(
+            modifier = Modifier
+                .scrollable(
+                    state = rememberScrollState(),
+                    orientation = Orientation.Vertical
+                )
+                .background(color = colorOf { primaryContainer.withAlpha(.35) })
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Weight(.5)
+
+            Text(
+                text = stringResource(id = R.string.sign_up),
+                style = textStyleOf { displayLarge }
             )
-            .background(color = colorOf { primaryContainer.withAlpha(.35) })
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Weight(.5)
 
-        Text(
-            text = stringResource(id = R.string.sign_up),
-            style = textStyleOf { displayLarge }
-        )
+            Weight(.5)
 
-        Weight(.5)
+            SignUpForm(
+                username = uiState.username,
+                email = uiState.email,
+                password = uiState.password,
+                autoSignIn = uiState.autoSignIn,
+                onSignUp = onSignUp
+            )
 
-        SignUpForm(
-            username = uiState.username,
-            email = uiState.email,
-            password = uiState.password,
-            autoSignIn = uiState.autoSignIn,
-            onSignUp = onSignUp
-        )
-
-        Spacer(24.dp)
+            Spacer(24.dp)
+        }
     }
 }
 
 @Composable
-fun AuthSignInScreen() {
+fun AuthSignInScreen(
+    uiState: AuthUiState.SignIn,
+    onSignIn: (String, String, Boolean) -> Unit
+) {
+    LoaderScaffold(uiState = uiState) {
+        Column(
+            modifier = Modifier
+                .scrollable(
+                    state = rememberScrollState(),
+                    orientation = Orientation.Vertical
+                )
+                .background(color = colorOf { primaryContainer.withAlpha(.35) })
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Weight(.5)
+
+            Text(
+                text = stringResource(id = R.string.sign_in),
+                style = textStyleOf { displayLarge }
+            )
+
+            Weight(.5)
+
+            SignInForm(
+                email = uiState.email,
+                password = uiState.password,
+                autoSignIn = uiState.autoSignIn,
+                onSignIn = onSignIn
+            )
+
+            Spacer(24.dp)
+        }
+    }
 }
 
 @Composable
-fun AuthAutoSigningInScreen() {
+fun AuthAutoSigningInScreen(
+    uiState: AuthUiState.SignIn,
+    onSignIn: (String, String, Boolean) -> Unit
+) {
+    val loaderState = rememberLoaderState()
+    val loaderVisuals = LoaderVisuals(
+        message = stringResource(id = R.string.sign_in_progress)
+    )
+
+    Loader(
+        modifier = Modifier.fillMaxSize(),
+        state = loaderState
+    )
+    LaunchedEffect(uiState) {
+        loaderState.show(loaderVisuals)
+        onSignIn(uiState.email, uiState.password, uiState.autoSignIn)
+    }
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -87,36 +144,38 @@ fun AuthOnBoardingScreen(
 ) {
     val pagerState = rememberPagerState()
     val page = uiState.onBoardingPages[pagerState.currentPage]
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorOf { page.background(this) }.withAlpha(.4)),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Weight()
-
-        HorizontalPager(
-            state = pagerState,
-            count = uiState.onBoardingPages.count()
-        ) {
-            OnBoardingPageContent(
-                modifier = Modifier.padding(horizontal = 16.dp),
-                page = page
-            )
-        }
-
-        Weight()
-
-        OnBoardingPagerProgress(
+    LoaderScaffold(uiState = uiState) {
+        Column(
             modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth(),
-            pagerState = pagerState,
-            currentPage = page,
-            onOnBoardingEnd = onOnBoardingEnd
-        )
+                .fillMaxSize()
+                .background(colorOf { page.background(this) }.withAlpha(.4)),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Weight()
 
-        Spacer(height = 16.dp)
+            HorizontalPager(
+                state = pagerState,
+                count = uiState.onBoardingPages.count()
+            ) {
+                OnBoardingPageContent(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    page = page
+                )
+            }
+
+            Weight()
+
+            OnBoardingPagerProgress(
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth(),
+                pagerState = pagerState,
+                currentPage = page,
+                onOnBoardingEnd = onOnBoardingEnd
+            )
+
+            Spacer(height = 16.dp)
+        }
     }
 }
 
@@ -136,6 +195,44 @@ fun PreviewAuthSignUpScreen() {
                 autoSignIn = false
             ),
             onSignUp = { _, _, _, _ -> }
+        )
+    }
+}
+
+@Preview("Auth SignIn screen", device = Devices.PIXEL_C)
+@Preview("Auth SignIn screen (dark)", uiMode = UI_MODE_NIGHT_YES, device = Devices.PIXEL_C)
+@Preview("Auth SignIn screen (big font)", fontScale = 1.5f, device = Devices.PIXEL_C)
+@Composable
+fun PreviewAuthSignInScreen() {
+    GiftingTheme {
+        AuthSignInScreen(
+            uiState = AuthUiState.SignIn(
+                loading = LoadingVisuals.Empty,
+                error = ErrorVisuals.Empty,
+                email = "",
+                password = "",
+                autoSignIn = false
+            ),
+            onSignIn = { _, _, _ -> }
+        )
+    }
+}
+
+@Preview("Auth AutoSignIn screen", device = Devices.PIXEL_C)
+@Preview("Auth AutoSignIn screen (dark)", uiMode = UI_MODE_NIGHT_YES, device = Devices.PIXEL_C)
+@Preview("Auth AutoSignIn screen (big font)", fontScale = 1.5f, device = Devices.PIXEL_C)
+@Composable
+fun PreviewAuthAutoSignInScreen() {
+    GiftingTheme {
+        AuthAutoSigningInScreen(
+            uiState = AuthUiState.SignIn(
+                loading = LoadingVisuals.Empty,
+                error = ErrorVisuals.Empty,
+                email = "",
+                password = "",
+                autoSignIn = true
+            ),
+            onSignIn = { _, _, _ -> }
         )
     }
 }

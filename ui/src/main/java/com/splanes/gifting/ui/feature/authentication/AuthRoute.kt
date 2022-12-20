@@ -24,7 +24,7 @@ fun AuthRoute(
 @Composable
 fun AuthRoute(
     uiState: AuthUiState,
-    onSignIn: () -> Unit,
+    onSignIn: (String, String, Boolean) -> Unit,
     onSignUp: (String, String, String, Boolean) -> Unit,
     onOnBoardingEnd: () -> Unit
 ) {
@@ -32,18 +32,22 @@ fun AuthRoute(
         when (screenType) {
             AuthScreenType.SigningIn -> {
                 check(uiState is AuthUiState.SignIn)
-                AuthAutoSigningInScreen()
+                AuthAutoSigningInScreen(uiState, onSignIn)
             }
+
             AuthScreenType.OnBoarding -> {
                 check(uiState is AuthUiState.SignUpWithOnBoarding)
                 AuthOnBoardingScreen(uiState, onOnBoardingEnd)
             }
+
             AuthScreenType.SignUp -> {
                 check(uiState is AuthUiState.SignUp)
                 AuthSignUpScreen(uiState, onSignUp)
             }
+
             AuthScreenType.SignIn -> {
-                AuthSignInScreen()
+                check(uiState is AuthUiState.SignIn)
+                AuthSignInScreen(uiState, onSignIn)
             }
         }
     }
@@ -63,6 +67,7 @@ private fun screenTypeOf(uiState: AuthUiState) =
         } else {
             AuthScreenType.SignIn
         }
+
         is AuthUiState.SignUp -> AuthScreenType.SignUp
         is AuthUiState.SignUpWithOnBoarding -> AuthScreenType.OnBoarding
     }

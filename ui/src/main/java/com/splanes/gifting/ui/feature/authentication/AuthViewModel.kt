@@ -96,7 +96,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signIn() {
+    fun signIn(email: String, password: String, remember: Boolean) {
     }
 
     fun signUp(email: String, password: String, username: String, remember: Boolean) {
