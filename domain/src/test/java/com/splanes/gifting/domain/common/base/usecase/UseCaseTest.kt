@@ -1,8 +1,10 @@
 package com.splanes.gifting.domain.common.base.usecase
 
 import com.google.common.truth.Truth.assertThat
+import com.splanes.gifting.domain.common.error.TimeoutException
+import kotlin.time.Duration.Companion.seconds
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
@@ -12,8 +14,19 @@ import org.junit.Test
 class UseCaseTest {
 
     private class DummyUseCase() : UseCase<String, Int>() {
-        override suspend fun UseCaseScope<Int>.execute(request: String) {
-            emitSuccess(request.toInt())
+        override suspend fun execute(request: String): Int =
+            request.toInt()
+    }
+
+    private class DummyWithErrorUseCase : UseCase<String, Int>() {
+        override suspend fun execute(request: String): Int =
+            throw RuntimeException()
+    }
+
+    private class DummyTimeoutUseCase : UseCase<String, Int>() {
+        override suspend fun execute(request: String): Int {
+            delay(timeout.plus(1.seconds))
+            error("Timeout")
         }
     }
 
@@ -21,37 +34,50 @@ class UseCaseTest {
     fun `use case is success`() = runTest {
         val useCase = DummyUseCase()
 
-        val values = mutableListOf<UseCase.Result<Int>>()
-        val collectJob = launch(UnconfinedTestDispatcher(testScheduler)) {
-            useCase("9").toList(values)
+        launch(UnconfinedTestDispatcher(testScheduler)) {
+            val actual = useCase("9")
+            assertThat(actual).run {
+                isNotNull()
+                isInstanceOf(UseCase.Success::class.java)
+            }
         }
-        assertThat(9.toInt()).isEqualTo(values[0])
     }
 
     @Test
     fun `use case is result is expected`() = runTest {
-        launch {
-            val useCase = DummyUseCase()
-            val flow = useCase("9")
-            flow.collect {
-                assertThat((it as? UseCase.Success)?.data).run {
-                    isNotNull()
-                    isEqualTo(9)
-                }
+        val useCase = DummyUseCase()
+
+        launch(UnconfinedTestDispatcher(testScheduler)) {
+            val actual = useCase("9")
+            assertThat((actual as? UseCase.Success)?.data).run {
+                isNotNull()
+                isEqualTo(9)
             }
         }
     }
 
     @Test
     fun `use case is error`() = runTest {
-        launch {
-            val useCase = DummyUseCase()
-            val flow = useCase("9")
-            flow.collect {
-                assertThat(it).run {
-                    isNotNull()
-                    isInstanceOf(UseCase.Failure::class.java)
-                }
+        val useCase = DummyWithErrorUseCase()
+
+        launch(UnconfinedTestDispatcher(testScheduler)) {
+            val actual = useCase("9")
+            assertThat(actual).run {
+                isNotNull()
+                isInstanceOf(UseCase.Failure::class.java)
+            }
+        }
+    }
+
+    @Test
+    fun `use case is error timeout`() = runTest {
+        val useCase = DummyTimeoutUseCase()
+
+        launch(UnconfinedTestDispatcher(testScheduler)) {
+            val actual = useCase("9")
+            assertThat((actual as? UseCase.Failure)?.error).run {
+                isNotNull()
+                isInstanceOf(TimeoutException::class.java)
             }
         }
     }
