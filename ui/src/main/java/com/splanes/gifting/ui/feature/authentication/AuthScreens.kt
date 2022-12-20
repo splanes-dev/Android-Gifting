@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,10 +22,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.splanes.gifting.ui.R
-import com.splanes.gifting.ui.common.components.loader.Loader
 import com.splanes.gifting.ui.common.components.loader.LoaderScaffold
-import com.splanes.gifting.ui.common.components.loader.LoaderVisuals
-import com.splanes.gifting.ui.common.components.loader.rememberLoaderState
 import com.splanes.gifting.ui.common.components.spacer.column.Spacer
 import com.splanes.gifting.ui.common.components.spacer.column.Weight
 import com.splanes.gifting.ui.common.uistate.ErrorVisuals
@@ -116,26 +112,6 @@ fun AuthSignInScreen(
     }
 }
 
-@Composable
-fun AuthAutoSigningInScreen(
-    uiState: AuthUiState.SignIn,
-    onSignIn: (String, String, Boolean) -> Unit
-) {
-    val loaderState = rememberLoaderState()
-    val loaderVisuals = LoaderVisuals(
-        message = stringResource(id = R.string.sign_in_progress)
-    )
-
-    Loader(
-        modifier = Modifier.fillMaxSize(),
-        state = loaderState
-    )
-    LaunchedEffect(uiState) {
-        loaderState.show(loaderVisuals)
-        onSignIn(uiState.email, uiState.password, uiState.autoSignIn)
-    }
-}
-
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun AuthOnBoardingScreen(
@@ -212,25 +188,6 @@ fun PreviewAuthSignInScreen() {
                 email = "",
                 password = "",
                 autoSignIn = false
-            ),
-            onSignIn = { _, _, _ -> }
-        )
-    }
-}
-
-@Preview("Auth AutoSignIn screen", device = Devices.PIXEL_C)
-@Preview("Auth AutoSignIn screen (dark)", uiMode = UI_MODE_NIGHT_YES, device = Devices.PIXEL_C)
-@Preview("Auth AutoSignIn screen (big font)", fontScale = 1.5f, device = Devices.PIXEL_C)
-@Composable
-fun PreviewAuthAutoSignInScreen() {
-    GiftingTheme {
-        AuthAutoSigningInScreen(
-            uiState = AuthUiState.SignIn(
-                loading = LoadingVisuals.Empty,
-                error = ErrorVisuals.Empty,
-                email = "",
-                password = "",
-                autoSignIn = true
             ),
             onSignIn = { _, _, _ -> }
         )
