@@ -1,13 +1,13 @@
 package com.splanes.gifting.domain.feature.user.repository
 
+import com.splanes.gifting.domain.feature.user.model.AuthStateValue
 import com.splanes.gifting.domain.feature.user.model.UserCredentials
-import com.splanes.gifting.domain.feature.user.model.UserLandingValue
 
 interface UserRepository {
 
-    suspend fun updateLandingValue(value: UserLandingValue): Boolean
+    suspend fun updateLandingValue(value: AuthStateValue): Boolean
 
-    suspend fun getLandingValue(): UserLandingValue
+    suspend fun getLandingValue(): AuthStateValue
 
     suspend fun getCredentials(): UserCredentials?
 }

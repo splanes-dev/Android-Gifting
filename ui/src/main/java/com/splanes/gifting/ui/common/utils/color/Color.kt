@@ -7,7 +7,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
 
 @Composable
-inline fun colorOf(crossinline block: ColorScheme.() -> Color): Color = MaterialTheme.colorScheme.block()
+inline fun colorOf(block: ColorScheme.() -> Color): Color =
+    MaterialTheme.colorScheme.block()
 
 fun Color.withAlpha(alpha: Double) = copy(alpha = alpha.toFloat())
 

@@ -1,8 +1,10 @@
 package com.splanes.gifting.domain.feature.user.model
 
-enum class UserLandingValue {
+enum class AuthStateValue {
     OnBoarding,
     SignUp,
     AutoSignIn,
-    SignIn
+    SignIn;
+
+    fun isSignedUp() = this in listOf(SignIn, AutoSignIn)
 }
