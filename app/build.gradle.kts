@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.splanes.burrowvault"
+    namespace = "com.splanes.gifting"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.splanes.burrowvault"
+        applicationId = "com.splanes.gifting"
         minSdk = 31
         targetSdk = 33
         versionCode = 1
