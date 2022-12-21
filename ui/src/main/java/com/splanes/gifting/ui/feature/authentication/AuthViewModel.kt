@@ -1,7 +1,7 @@
 package com.splanes.gifting.ui.feature.authentication
 
-import com.splanes.gifting.domain.feature.user.model.AuthStateValue
-import com.splanes.gifting.domain.feature.user.usecase.GetAuthStateUseCase
+import com.splanes.gifting.domain.feature.auth.model.AuthStateValue
+import com.splanes.gifting.domain.feature.auth.usecase.GetAuthStateUseCase
 import com.splanes.gifting.ui.common.uistate.ErrorVisuals
 import com.splanes.gifting.ui.common.uistate.LoadingVisuals
 import com.splanes.gifting.ui.common.uistate.UiViewModel

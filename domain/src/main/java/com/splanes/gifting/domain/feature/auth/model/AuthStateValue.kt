@@ -1,4 +1,4 @@
-package com.splanes.gifting.domain.feature.user.model
+package com.splanes.gifting.domain.feature.auth.model
 
 enum class AuthStateValue {
     OnBoarding,

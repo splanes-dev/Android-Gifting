@@ -1,7 +1,7 @@
 package com.splanes.gifting.data.infrastructure.di
 
-import com.splanes.gifting.data.feature.user.datasource.UserLocalDataSource
-import com.splanes.gifting.data.feature.user.datasource.UserLocalDataSourceImpl
+import com.splanes.gifting.data.feature.auth.datasource.AuthLocalDataSource
+import com.splanes.gifting.data.feature.auth.datasource.impl.AuthLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,5 +12,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class DataSourceModule {
 
     @Binds
-    abstract fun userLocalDataSource(impl: UserLocalDataSourceImpl): UserLocalDataSource
+    abstract fun authLocalDataSource(impl: AuthLocalDataSourceImpl): AuthLocalDataSource
 }

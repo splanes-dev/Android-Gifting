@@ -1,7 +1,7 @@
 package com.splanes.gifting.data.infrastructure.di
 
-import com.splanes.gifting.data.feature.user.repository.UserRepositoryImpl
-import com.splanes.gifting.domain.feature.user.repository.UserRepository
+import com.splanes.gifting.data.feature.auth.repository.AuthRepositoryImpl
+import com.splanes.gifting.domain.feature.auth.AuthRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,5 +12,5 @@ import dagger.hilt.components.SingletonComponent
 abstract class RepositoryModule {
 
     @Binds
-    abstract fun userRepository(impl: UserRepositoryImpl): UserRepository
+    abstract fun authRepository(impl: AuthRepositoryImpl): AuthRepository
 }
