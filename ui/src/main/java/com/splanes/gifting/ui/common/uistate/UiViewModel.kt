@@ -2,6 +2,8 @@ package com.splanes.gifting.ui.common.uistate
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.splanes.gifting.domain.common.base.usecase.UseCase
+import com.splanes.gifting.domain.common.error.KnownException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,5 +24,23 @@ abstract class UiViewModel<T : UiState, V : UiViewModelState<T>>(initialState: V
 
     protected fun <T> launch(block: suspend () -> T) {
         viewModelScope.launch { block() }
+    }
+
+    protected fun <T> UseCase.Result<T>.withSuccess(
+        block: (T) -> Unit
+    ) = apply {
+        when (this) {
+            is UseCase.Failure -> {}
+            is UseCase.Success -> block(data)
+        }
+    }
+
+    protected fun <T> UseCase.Result<T>.withFailure(
+        block: (KnownException) -> Unit
+    ) = apply {
+        when (this) {
+            is UseCase.Failure -> block(error)
+            is UseCase.Success -> {}
+        }
     }
 }
