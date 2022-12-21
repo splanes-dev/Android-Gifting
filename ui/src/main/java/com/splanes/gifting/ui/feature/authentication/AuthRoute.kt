@@ -28,35 +28,12 @@ fun AuthRoute(
     onSignUp: (String, String, String, Boolean) -> Unit,
     onOnBoardingEnd: () -> Unit
 ) {
-    Crossfade(screenTypeOf(uiState)) { screenType ->
-        when (screenType) {
-            AuthScreenType.OnBoarding -> {
-                check(uiState is AuthUiState.SignUpWithOnBoarding)
-                AuthOnBoardingScreen(uiState, onOnBoardingEnd)
-            }
-
-            AuthScreenType.SignUp -> {
-                check(uiState is AuthUiState.SignUp)
-                AuthSignUpScreen(uiState, onSignUp)
-            }
-
-            AuthScreenType.SignIn -> {
-                check(uiState is AuthUiState.SignIn)
-                AuthSignInScreen(uiState, onSignIn)
-            }
+    Crossfade(uiState) { screenUiState ->
+        when (screenUiState) {
+            is AuthUiState.SignIn -> AuthSignInScreen(screenUiState, onSignIn)
+            is AuthUiState.SignUp -> AuthSignUpScreen(screenUiState, onSignUp)
+            is AuthUiState.SignUpWithOnBoarding ->
+                AuthOnBoardingScreen(screenUiState, onOnBoardingEnd)
         }
     }
 }
-
-private enum class AuthScreenType {
-    SignUp,
-    SignIn,
-    OnBoarding
-}
-
-private fun screenTypeOf(uiState: AuthUiState) =
-    when (uiState) {
-        is AuthUiState.SignIn -> AuthScreenType.SignIn
-        is AuthUiState.SignUp -> AuthScreenType.SignUp
-        is AuthUiState.SignUpWithOnBoarding -> AuthScreenType.OnBoarding
-    }
