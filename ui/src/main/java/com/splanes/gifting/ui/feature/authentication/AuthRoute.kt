@@ -30,6 +30,7 @@ fun AuthRoute(
 ) {
     Crossfade(uiState) { screenUiState ->
         when (screenUiState) {
+            AuthUiState.Landing -> AuthLandingScreen()
             is AuthUiState.SignIn -> AuthSignInScreen(screenUiState, onSignIn)
             is AuthUiState.SignUp -> AuthSignUpScreen(screenUiState, onSignUp)
             is AuthUiState.SignUpWithOnBoarding ->

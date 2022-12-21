@@ -13,6 +13,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.update
 
 data class AuthUiViewModelState(
+    private val isLandingVisible: Boolean = true,
     private val error: ErrorVisuals = ErrorVisuals.Empty,
     private val loading: LoadingVisuals = LoadingVisuals.Empty,
     private val isSignedUp: Boolean = false,
@@ -24,6 +25,9 @@ data class AuthUiViewModelState(
 ) : UiViewModelState<AuthUiState> {
     override fun toUiState(): AuthUiState =
         when {
+            isLandingVisible -> {
+                AuthUiState.Landing
+            }
             isSignedUp -> {
                 AuthUiState.SignIn(
                     error = error,
@@ -62,7 +66,7 @@ data class AuthUiViewModelState(
 class AuthViewModel @Inject constructor(
     private val getAuthState: GetAuthStateUseCase
 ) : UiViewModel<AuthUiState, AuthUiViewModelState>(
-    AuthUiViewModelState(loading = LoadingVisuals(visible = true))
+    AuthUiViewModelState()
 ) {
     init {
         launchGetAuthState()
@@ -70,13 +74,11 @@ class AuthViewModel @Inject constructor(
 
     private fun launchGetAuthState() {
         launch {
-            viewModelState.update { state ->
-                state.copy(loading = LoadingVisuals(visible = true))
-            }
             getAuthState()
                 .withSuccess { result ->
                     viewModelState.update { state ->
                         state.copy(
+                            isLandingVisible = false,
                             loading = LoadingVisuals(visible = false),
                             isSignedUp = result.isSignedUp(),
                             autoSignIn = result == AuthStateValue.AutoSignIn,
@@ -91,6 +93,7 @@ class AuthViewModel @Inject constructor(
                 .withFailure { error ->
                     viewModelState.update { state ->
                         state.copy(
+                            isLandingVisible = false,
                             loading = LoadingVisuals(visible = false)
                             // error = ErrorVisuals(TODO)
                         )
