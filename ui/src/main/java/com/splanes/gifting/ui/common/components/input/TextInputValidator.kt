@@ -14,8 +14,8 @@ fun TextInputValidator.Companion.of(regex: Regex, feedback: String) = object : T
 }
 
 val TextInputValidator.Companion.NotBlank
-    get() = Regex("^(\\w)+$")
+    get() = Regex("^.*(\\w)+.*$")
 val TextInputValidator.Companion.Email
     get() = Patterns.EMAIL_ADDRESS.pattern().toRegex()
 val TextInputValidator.Companion.Password
-    get() = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$")
+    get() = Regex("^.*(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}.*$")
