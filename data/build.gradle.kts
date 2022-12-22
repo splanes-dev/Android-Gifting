@@ -31,4 +31,5 @@ dependencies {
     implementation(projects.domain)
     implementation(baseLibs.gson)
     implementation(androidLibs.android.security.crypto)
+    implementation(baseLibs.google.firebase.auth)
 }

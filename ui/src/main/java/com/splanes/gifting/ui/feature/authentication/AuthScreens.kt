@@ -69,7 +69,7 @@ fun AuthSignUpScreen(
                 username = uiState.username,
                 email = uiState.email,
                 password = uiState.password,
-                autoSignIn = uiState.autoSignIn,
+                autoSignIn = false,
                 onSignUp = onSignUp
             )
 
@@ -121,7 +121,7 @@ fun AuthSignInScreen(
             SignInForm(
                 email = uiState.email,
                 password = uiState.password,
-                autoSignIn = uiState.autoSignIn,
+                autoSignIn = false,
                 onSignIn = onSignIn
             )
 
@@ -185,8 +185,7 @@ fun PreviewAuthSignUpScreen() {
                 error = ErrorVisuals.Empty,
                 email = "",
                 password = "",
-                username = "",
-                autoSignIn = false
+                username = ""
             ),
             onSignUp = { _, _, _, _ -> }
         )
@@ -204,8 +203,7 @@ fun PreviewAuthSignInScreen() {
                 loading = LoadingVisuals.Empty,
                 error = ErrorVisuals.Empty,
                 email = "",
-                password = "",
-                autoSignIn = false
+                password = ""
             ),
             onSignIn = { _, _, _ -> }
         )

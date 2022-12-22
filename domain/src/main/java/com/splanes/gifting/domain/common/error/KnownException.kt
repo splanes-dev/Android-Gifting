@@ -5,5 +5,6 @@ sealed class KnownException : Throwable()
 object TimeoutException : KnownException()
 
 object GenericException : KnownException()
+object SignUpException : KnownException()
 
-object CredentialsNotFound : KnownException()
+object SignInException : KnownException()

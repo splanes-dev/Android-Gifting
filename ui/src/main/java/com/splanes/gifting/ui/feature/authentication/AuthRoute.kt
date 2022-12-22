@@ -2,6 +2,7 @@ package com.splanes.gifting.ui.feature.authentication
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -13,6 +14,18 @@ fun AuthRoute(
     onNavToDashboard: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiSideEffect by viewModel.authSideEffect.collectAsStateWithLifecycle()
+
+    LaunchedEffect(uiSideEffect) {
+        when (uiSideEffect) {
+            AuthUiSideEffect.None -> {
+                // Should not be possible
+            }
+
+            AuthUiSideEffect.NavToDashboard -> onNavToDashboard()
+        }
+    }
+
     AuthRoute(
         uiState = uiState,
         onSignIn = viewModel::signIn,

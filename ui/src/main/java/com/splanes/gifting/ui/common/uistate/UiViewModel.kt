@@ -26,7 +26,7 @@ abstract class UiViewModel<T : UiState, V : UiViewModelState<T>>(initialState: V
         viewModelScope.launch { block() }
     }
 
-    protected fun <T> UseCase.Result<T>.withSuccess(
+    protected fun <T> UseCase.Result<T>.then(
         block: (T) -> Unit
     ) = apply {
         when (this) {
@@ -35,7 +35,7 @@ abstract class UiViewModel<T : UiState, V : UiViewModelState<T>>(initialState: V
         }
     }
 
-    protected fun <T> UseCase.Result<T>.withFailure(
+    protected fun <T> UseCase.Result<T>.catch(
         block: (KnownException) -> Unit
     ) = apply {
         when (this) {

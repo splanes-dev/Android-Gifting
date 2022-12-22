@@ -21,8 +21,7 @@ sealed interface AuthUiState : UiState {
         override val loading: LoadingVisuals,
         override val error: ErrorVisuals,
         override val email: String,
-        override val password: String,
-        val autoSignIn: Boolean
+        override val password: String
     ) : AuthUiState
 
     data class SignUp(
@@ -30,8 +29,7 @@ sealed interface AuthUiState : UiState {
         override val error: ErrorVisuals,
         override val email: String,
         override val password: String,
-        val username: String,
-        val autoSignIn: Boolean
+        val username: String
     ) : AuthUiState
 
     data class SignUpWithOnBoarding(

@@ -6,13 +6,13 @@ import com.splanes.gifting.domain.feature.auth.model.AuthStateValue
 import javax.inject.Inject
 
 class GetAuthStateUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val repository: AuthRepository
 ) : UseCase<Unit, AuthStateValue>() {
 
     override suspend fun execute(request: Unit): AuthStateValue {
-        val authState = authRepository.getAuthStateValue()
+        val authState = repository.getAuthStateValue()
         if (authState == AuthStateValue.OnBoarding) {
-            authRepository.updateAuthStateValue(AuthStateValue.SignUp)
+            repository.updateAuthStateValue(AuthStateValue.SignUp)
         }
         return authState
     }
