@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="wishlists">Wishlists</string>
+    <string name="group_lists">Shared</string>
+    <string name="invisible_friend">Draw</string>
+</resources>

@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.splanes.gifting.ui.feature.authentication.AuthRoute
 import com.splanes.gifting.ui.feature.authentication.AuthViewModel
+import com.splanes.gifting.ui.feature.dashboard.DashboardRoute
 
 @Composable
 fun GiftingNavGraph(
@@ -27,6 +28,9 @@ fun GiftingNavGraph(
                 viewModel = viewModel,
                 onNavToDashboard = navActions.navToDashboard
             )
+        }
+        composable(GiftingDestinations.Dashboard) {
+            DashboardRoute()
         }
     }
 }

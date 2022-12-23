@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 
 object GiftingDestinations {
     const val Authentication = "auth"
-    const val Dashboard = "home/dashboard"
+    const val Dashboard = "dashboard"
 }
 
 class GiftingNavigationActions(private val navController: NavHostController) {

@@ -127,7 +127,7 @@ class AuthViewModel @Inject constructor(
     private fun launchAutoSignIn() {
         launch {
             autoSignIn().then {
-                // TODO: Nav to Dashboard
+                _authSideEffect.update { AuthUiSideEffect.NavToDashboard }
             }.catch {
                 viewModelState.update { state ->
                     state.copy(
@@ -141,6 +141,7 @@ class AuthViewModel @Inject constructor(
 
     fun signIn(email: String, password: String, remember: Boolean) {
         launch {
+            viewModelState.update { state -> state.copy(loading = LoadingVisuals(visible = true)) }
             signIn(
                 SignInRequest(
                     email = email,
@@ -148,7 +149,7 @@ class AuthViewModel @Inject constructor(
                     autoSignIn = remember
                 )
             ).then {
-                // TODO: Nav to Dashboard
+                _authSideEffect.update { AuthUiSideEffect.NavToDashboard }
             }.catch {
                 viewModelState.update { state ->
                     state.copy(
@@ -160,8 +161,9 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signUp(email: String, password: String, username: String, remember: Boolean) {
+    fun signUp(username: String, email: String, password: String, remember: Boolean) {
         launch {
+            viewModelState.update { state -> state.copy(loading = LoadingVisuals(visible = true)) }
             signUp(
                 SignUpRequest(
                     username = username,
@@ -170,7 +172,7 @@ class AuthViewModel @Inject constructor(
                     autoSignIn = remember
                 )
             ).then {
-                // TODO: Nav to Dashboard
+                _authSideEffect.update { AuthUiSideEffect.NavToDashboard }
             }.catch {
                 viewModelState.update { state ->
                     state.copy(
