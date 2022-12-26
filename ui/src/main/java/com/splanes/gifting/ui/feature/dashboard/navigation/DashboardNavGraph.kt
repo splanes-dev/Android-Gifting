@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,6 +28,8 @@ import com.splanes.gifting.ui.R
 import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.common.utils.color.withAlpha
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
+import com.splanes.gifting.ui.feature.wishlists.WishlistsRoute
+import com.splanes.gifting.ui.feature.wishlists.WishlistsViewModel
 
 @Composable
 fun DashboardNavGraph(
@@ -45,6 +48,8 @@ fun DashboardNavGraph(
             composable(DashboardDestinations.Home) {
             }
             composable(DashboardDestinations.Wishlists) {
+                val viewModel: WishlistsViewModel = hiltViewModel()
+                WishlistsRoute(viewModel)
             }
             composable(DashboardDestinations.GroupLists) {
             }

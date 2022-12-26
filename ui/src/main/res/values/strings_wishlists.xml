@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="wishlists_empty_title">There\'s no wishlists</string>
+    <string name="wishlists_empty_description">
+        You hadn\'t created any wishlists yet.\n
+        Rock in by creating your first wishlist and save all those thing you desire.
+    </string>
+    <string name="wishlist_create_button">New wishlist</string>
+    <string name="wishlist_create">Create wishlist</string>
+    <string name="wishlist_name">Name</string>
+    <string name="wishlist_description">Description</string>
+</resources>

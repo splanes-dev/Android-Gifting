@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -47,7 +48,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextInput(state: TextInputState, modifier: Modifier = Modifier, visuals: TextInputVisuals) {
+fun TextInput(
+    state: TextInputState,
+    visuals: TextInputVisuals,
+    modifier: Modifier = Modifier,
+    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors()
+) {
     val inputValue = state.inputValue
     val coroutineScope = rememberCoroutineScope()
     var focused by rememberStateOf(value = false)
@@ -66,8 +72,8 @@ fun TextInput(state: TextInputState, modifier: Modifier = Modifier, visuals: Tex
                     Text(text = placeholder, style = textStyleOf { titleSmall })
                 }
             },
-            leadingIcon = {
-                visuals.leadingIcon?.let { leadingIcon ->
+            leadingIcon = visuals.leadingIcon?.let { leadingIcon ->
+                {
                     Crossfade(targetState = focused) { hasFocus ->
                         Icon(
                             modifier = Modifier.size(24.dp),
@@ -133,7 +139,7 @@ fun TextInput(state: TextInputState, modifier: Modifier = Modifier, visuals: Tex
                 }
             },
             visualTransformation = visuals.transformation(plainText),
-            colors = TextFieldDefaults.outlinedTextFieldColors(),
+            colors = colors,
             keyboardOptions = visuals.keyboardOptions(),
             singleLine = true,
             isError = inputValue is TextInputValue.Error
@@ -163,6 +169,7 @@ fun TextInput(state: TextInputState, modifier: Modifier = Modifier, visuals: Tex
 
 private const val ANIMATION_MILLIS = 300
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 private fun TextInputPreview() {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Mail
 import androidx.compose.material.icons.rounded.Password
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,6 +32,7 @@ import com.splanes.gifting.ui.common.utils.remember.rememberStateOf
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColumnScope.SignInForm(
     email: String,
