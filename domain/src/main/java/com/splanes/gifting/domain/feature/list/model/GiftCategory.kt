@@ -7,5 +7,10 @@ enum class GiftCategory {
     Tech,
     Retail,
     Other,
-    Undefined
+    Undefined;
+
+    companion object
 }
+
+fun GiftCategory.Companion.fromName(name: String) =
+    GiftCategory.values().find { it.name == name } ?: GiftCategory.Undefined
