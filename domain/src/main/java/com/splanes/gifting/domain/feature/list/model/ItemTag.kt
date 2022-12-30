@@ -1,6 +1,6 @@
 package com.splanes.gifting.domain.feature.list.model
 
-data class GiftTag(
+data class ItemTag(
     val id: String,
     val name: String
 )

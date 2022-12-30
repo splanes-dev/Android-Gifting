@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 data class AuthUiViewModelState(
     private val isLandingVisible: Boolean = true,
     private val error: ErrorVisuals = ErrorVisuals.Empty,
-    private val loading: LoadingVisuals = LoadingVisuals.Empty,
+    private val loading: LoadingVisuals = LoadingVisuals.Hidden,
     private val isSignedUp: Boolean = false,
     private val email: String = "",
     private val username: String = "",
@@ -141,7 +141,7 @@ class AuthViewModel @Inject constructor(
 
     fun signIn(email: String, password: String, remember: Boolean) {
         launch {
-            viewModelState.update { state -> state.copy(loading = LoadingVisuals(visible = true)) }
+            viewModelState.update { state -> state.copy(loading = LoadingVisuals.Visible) }
             signIn(
                 SignInRequest(
                     email = email,
@@ -163,7 +163,7 @@ class AuthViewModel @Inject constructor(
 
     fun signUp(username: String, email: String, password: String, remember: Boolean) {
         launch {
-            viewModelState.update { state -> state.copy(loading = LoadingVisuals(visible = true)) }
+            viewModelState.update { state -> state.copy(loading = LoadingVisuals.Visible) }
             signUp(
                 SignUpRequest(
                     username = username,

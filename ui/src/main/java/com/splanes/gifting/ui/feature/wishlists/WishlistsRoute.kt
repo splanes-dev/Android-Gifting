@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
 import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistRequest
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -16,6 +17,7 @@ fun WishlistsRoute(viewModel: WishlistsViewModel) {
         onNewWishlistClick = viewModel::onNewWishlist,
         onNewWishlistDismiss = viewModel::onDismissNewWishlist,
         onCreateWishlist = viewModel::onCreateWishlist,
+        onWishlistClick = viewModel::openWishlist
     )
 }
 
@@ -24,7 +26,8 @@ fun WishlistsRoute(
     uiState: WishlistsUiState,
     onNewWishlistClick: () -> Unit,
     onNewWishlistDismiss: () -> Unit,
-    onCreateWishlist: (NewWishlistRequest) -> Unit
+    onCreateWishlist: (NewWishlistRequest) -> Unit,
+    onWishlistClick: (Wishlist) -> Unit
 ) {
     Crossfade(uiState) { screenUiState ->
         when (screenUiState) {
@@ -36,8 +39,17 @@ fun WishlistsRoute(
                     onCreateWishlist = onCreateWishlist
                 )
 
-            is WishlistsUiState.WishlistOpened -> TODO()
-            is WishlistsUiState.Wishlists -> TODO()
+            is WishlistsUiState.WishlistOpened -> {
+                // TODO
+            }
+            is WishlistsUiState.Wishlists ->
+                WishlistGridScreen(
+                    uiState = screenUiState,
+                    onNewWishlistClick = onNewWishlistClick,
+                    onNewWishlistDismiss = onNewWishlistDismiss,
+                    onCreateWishlist = onCreateWishlist,
+                    onWishlistClick = onWishlistClick
+                )
         }
     }
 }

@@ -5,9 +5,16 @@ data class LoadingVisuals(
     val message: String? = null
 ) {
     companion object {
-        val Empty get() = LoadingVisuals(
-            visible = false,
-            message = null
-        )
+        val Hidden
+            get() = LoadingVisuals(
+                visible = false,
+                message = null
+            )
+
+        val Visible
+            get() = LoadingVisuals(
+                visible = true,
+                message = null
+            )
     }
 }

@@ -13,7 +13,7 @@ sealed interface AuthUiState : UiState {
     object Landing : AuthUiState {
         override val email: String = ""
         override val password: String = ""
-        override val loading: LoadingVisuals = LoadingVisuals.Empty
+        override val loading: LoadingVisuals = LoadingVisuals.Hidden
         override val error: ErrorVisuals = ErrorVisuals.Empty
     }
 

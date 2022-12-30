@@ -1,29 +1,29 @@
 package com.splanes.gifting.data.feature.list.wishlist.datasource.impl
 
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
-import com.splanes.gifting.data.common.utils.database.async
+import com.splanes.gifting.data.common.database.GiftingRemoteDatabase
+import com.splanes.gifting.data.common.utils.database.get
+import com.splanes.gifting.data.common.utils.database.read
+import com.splanes.gifting.data.common.utils.database.write
 import com.splanes.gifting.data.feature.list.wishlist.datasource.WishlistRemoteDataSource
 import com.splanes.gifting.data.feature.list.wishlist.entity.WishlistDto
-import com.splanes.gifting.domain.common.error.NotLoggedException
 import javax.inject.Inject
 
 class WishlistRemoteDataSourceImpl @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val database: FirebaseDatabase
+    private val database: GiftingRemoteDatabase
 ) : WishlistRemoteDataSource {
 
     override suspend fun getWishlists(): List<WishlistDto> =
         database
-            .wishlistRef(auth)
-            .async { snapshot ->
+            .wishlistsRef
+            .read { snapshot ->
                 snapshot.children.mapNotNull {
-                    it.getValue(WishlistDto::class.java)
+                    it.get()
                 }
             }
 
-    private fun FirebaseDatabase.wishlistRef(auth: FirebaseAuth) =
-        auth.currentUser?.uid?.let { uid ->
-            reference.child(uid).child("wishlists")
-        } ?: throw NotLoggedException
+    override suspend fun createWishlist(wishlist: WishlistDto): Boolean =
+        database
+            .wishlistsRef
+            .child(wishlist.id.orEmpty())
+            .write(wishlist)
 }

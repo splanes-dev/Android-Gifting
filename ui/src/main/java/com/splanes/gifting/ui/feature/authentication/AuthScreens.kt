@@ -181,7 +181,7 @@ fun PreviewAuthSignUpScreen() {
     GiftingTheme {
         AuthSignUpScreen(
             uiState = AuthUiState.SignUp(
-                loading = LoadingVisuals.Empty,
+                loading = LoadingVisuals.Hidden,
                 error = ErrorVisuals.Empty,
                 email = "",
                 password = "",
@@ -200,7 +200,7 @@ fun PreviewAuthSignInScreen() {
     GiftingTheme {
         AuthSignInScreen(
             uiState = AuthUiState.SignIn(
-                loading = LoadingVisuals.Empty,
+                loading = LoadingVisuals.Hidden,
                 error = ErrorVisuals.Empty,
                 email = "",
                 password = ""
@@ -218,7 +218,7 @@ fun PreviewAuthOnBoardingScreen() {
     GiftingTheme {
         AuthOnBoardingScreen(
             uiState = AuthUiState.SignUpWithOnBoarding(
-                loading = LoadingVisuals.Empty,
+                loading = LoadingVisuals.Hidden,
                 error = ErrorVisuals.Empty,
                 email = "",
                 password = "",

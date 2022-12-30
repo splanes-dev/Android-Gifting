@@ -1,5 +1,6 @@
 package com.splanes.gifting.ui.feature.wishlists
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +17,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
 import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistRequest
 import com.splanes.gifting.ui.R
 import com.splanes.gifting.ui.common.components.bottomsheet.BottomSheetLayout
@@ -25,6 +28,7 @@ import com.splanes.gifting.ui.common.components.loader.LoaderScaffold
 import com.splanes.gifting.ui.common.components.spacer.column.Weight
 import com.splanes.gifting.ui.common.components.topbar.GiftingTopBar
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistCreateForm
+import com.splanes.gifting.ui.feature.wishlists.components.WishlistsGrid
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -89,6 +93,70 @@ fun WishlistsEmptyScreen(
                     )
 
                     Weight(.5)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun WishlistGridScreen(
+    uiState: WishlistsUiState.Wishlists,
+    onNewWishlistClick: () -> Unit,
+    onNewWishlistDismiss: () -> Unit,
+    onCreateWishlist: (NewWishlistRequest) -> Unit,
+    onWishlistClick: (Wishlist) -> Unit
+) {
+    val bottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { value ->
+            if (value == ModalBottomSheetValue.Hidden) onNewWishlistDismiss()
+            true
+        }
+    )
+
+    LaunchedEffect(uiState.isNewWishlistOpen) {
+        bottomSheetState.animateTo(
+            if (uiState.isNewWishlistOpen) {
+                ModalBottomSheetValue.Expanded
+            } else {
+                ModalBottomSheetValue.Hidden
+            }
+        )
+    }
+
+    LoaderScaffold(uiState = uiState) {
+        BottomSheetLayout(
+            state = bottomSheetState,
+            modalContent = {
+                WishlistCreateForm(onCreateWishlist, onNewWishlistDismiss)
+            }
+        ) {
+            Scaffold(
+                topBar = {
+                    GiftingTopBar(title = stringResource(id = R.string.wishlists))
+                }
+            ) { innerPaddings ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPaddings)
+                ) {
+                    WishlistsGrid(
+                        modifier = Modifier.padding(top = 16.dp),
+                        wishlists = uiState.wishlists,
+                        onWishlistClick = onWishlistClick
+                    )
+
+                    GiftingButton(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .align(Alignment.BottomEnd)
+                            .padding(16.dp),
+                        text = stringResource(id = R.string.wishlist_create_button),
+                        onClick = onNewWishlistClick
+                    )
                 }
             }
         }

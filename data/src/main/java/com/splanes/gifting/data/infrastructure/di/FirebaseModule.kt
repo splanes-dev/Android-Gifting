@@ -15,5 +15,8 @@ object FirebaseModule {
     fun firebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 
     @Provides
-    fun firebaseDatabase(): FirebaseDatabase = FirebaseDatabase.getInstance()
+    fun firebaseDatabase(): FirebaseDatabase =
+        FirebaseDatabase.getInstance(
+            "https://gifting-caf5f-default-rtdb.europe-west1.firebasedatabase.app/"
+        )
 }

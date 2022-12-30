@@ -9,4 +9,9 @@
     <string name="wishlist_create">Create wishlist</string>
     <string name="wishlist_name">Name</string>
     <string name="wishlist_description">Description</string>
+    <plurals name="wishlist_item_count">
+        <item quantity="zero">empty</item>
+        <item quantity="one">1 item</item>
+        <item quantity="other">%d items</item>
+    </plurals>
 </resources>

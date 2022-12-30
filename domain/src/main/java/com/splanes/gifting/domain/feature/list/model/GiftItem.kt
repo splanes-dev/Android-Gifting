@@ -8,7 +8,7 @@ interface GiftItem {
     val price: Double?
     val url: String?
     val addedOn: Long?
-    val tags: List<GiftTag>
+    val tags: List<ItemTag>
     val notes: String?
     val categories: List<GiftCategory>
 }
