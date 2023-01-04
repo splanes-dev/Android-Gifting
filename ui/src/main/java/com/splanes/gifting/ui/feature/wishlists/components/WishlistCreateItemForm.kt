@@ -175,7 +175,7 @@ private fun WishlistCreateItemFormPreview() {
     GiftingTheme {
         WishlistCreateItemForm(
             onCreate = { },
-            onDismiss = { /*TODO*/ }
+            onDismiss = { }
         )
     }
 }
