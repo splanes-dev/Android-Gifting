@@ -216,7 +216,6 @@ fun EmptyWishlistOpenedScreen(
                             GiftingIconButton(
                                 imageVector = Icons.Rounded.West,
                                 tint = colorOf { onPrimaryContainer },
-                                size = 20.dp,
                                 onClick = onCloseWishlist
                             )
                         }
