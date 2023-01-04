@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.West
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -23,17 +25,21 @@ import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistReque
 import com.splanes.gifting.ui.R
 import com.splanes.gifting.ui.common.components.bottomsheet.BottomSheetLayout
 import com.splanes.gifting.ui.common.components.buttons.GiftingButton
+import com.splanes.gifting.ui.common.components.buttons.GiftingIconButton
 import com.splanes.gifting.ui.common.components.emptystate.EmptyState
 import com.splanes.gifting.ui.common.components.loader.LoaderScaffold
 import com.splanes.gifting.ui.common.components.spacer.column.Weight
 import com.splanes.gifting.ui.common.components.topbar.GiftingTopBar
+import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistCreateForm
+import com.splanes.gifting.ui.feature.wishlists.components.WishlistCreateItemForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistsGrid
+import com.splanes.gifting.ui.feature.wishlists.model.WishlistItemFormResultData
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WishlistsEmptyScreen(
-    uiState: WishlistsUiState.Empty,
+    uiState: WishlistsUiState.EmptyWishlists,
     onNewWishlistClick: () -> Unit,
     onNewWishlistDismiss: () -> Unit,
     onCreateWishlist: (NewWishlistRequest) -> Unit
@@ -157,6 +163,76 @@ fun WishlistGridScreen(
                         text = stringResource(id = R.string.wishlist_create_button),
                         onClick = onNewWishlistClick
                     )
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun EmptyWishlistOpenedScreen(
+    uiState: WishlistsUiState.EmptyWishlistOpen,
+    onNewItemClick: () -> Unit,
+    onNewItemDismiss: () -> Unit,
+    onCreateItem: (WishlistItemFormResultData) -> Unit,
+    onCloseWishlist: () -> Unit
+) {
+    val wishlist = uiState.wishlist
+    val bottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = { value ->
+            if (value == ModalBottomSheetValue.Hidden) onNewItemDismiss()
+            true
+        }
+    )
+
+    LaunchedEffect(uiState.isNewItemOpen) {
+        bottomSheetState.animateTo(
+            if (uiState.isNewItemOpen) {
+                ModalBottomSheetValue.Expanded
+            } else {
+                ModalBottomSheetValue.Hidden
+            }
+        )
+    }
+
+    LoaderScaffold(uiState = uiState) {
+        BottomSheetLayout(
+            state = bottomSheetState,
+            modalContent = {
+                WishlistCreateItemForm(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                    onCreate = onCreateItem,
+                    onDismiss = onNewItemDismiss
+                )
+            }
+        ) {
+            Scaffold(
+                topBar = {
+                    GiftingTopBar(
+                        title = wishlist.name,
+                        navigationIcon = {
+                            GiftingIconButton(
+                                imageVector = Icons.Rounded.West,
+                                tint = colorOf { onPrimaryContainer },
+                                size = 20.dp,
+                                onClick = onCloseWishlist
+                            )
+                        }
+                    )
+                }
+            ) { innerPaddings ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPaddings)
+                ) {
+                    GiftingButton(
+                        text = "Create item"
+                    ) {
+                        onNewItemClick()
+                    }
                 }
             }
         }

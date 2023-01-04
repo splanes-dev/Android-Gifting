@@ -1,4 +1,4 @@
-package com.splanes.gifting.ui.common.components.input
+package com.splanes.gifting.ui.common.components.input.text
 
 import android.util.Patterns
 

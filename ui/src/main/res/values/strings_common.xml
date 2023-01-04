@@ -3,12 +3,16 @@
     <string name="app_name">Gifting</string>
     <string name="clear">Clear</string>
     <string name="skip">Skip</string>
+    <string name="done">Done</string>
     <string name="cancel">Cancel</string>
     <string name="create">Create</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="category_picker_title">Categories</string>
+    <string name="category_picker_add_item">Add category</string>
     <string name="field_mandatory">Mandatory field</string>
+    <string name="field_invalid_price">Invalid price</string>
     <string name="field_invalid_email_format">Invalid email format</string>
     <string name="field_password_weak">Password must be 8 chars length and contains, at least, an uppercase, lowercase and a number</string>
 </resources>

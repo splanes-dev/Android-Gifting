@@ -1,4 +1,4 @@
-package com.splanes.gifting.ui.common.components.input
+package com.splanes.gifting.ui.common.components.input.text
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -96,6 +96,8 @@ fun TextInput(
             },
             trailingIcon = {
                 when (visuals.inputType) {
+                    TextInputVisuals.InputType.Url,
+                    TextInputVisuals.InputType.Number,
                     TextInputVisuals.InputType.Text,
                     TextInputVisuals.InputType.Email -> {
                         AnimatedVisibility(

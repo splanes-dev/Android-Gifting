@@ -1,4 +1,4 @@
-package com.splanes.gifting.ui.common.components.input
+package com.splanes.gifting.ui.common.components.input.text
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue

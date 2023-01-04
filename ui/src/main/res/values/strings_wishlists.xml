@@ -9,9 +9,13 @@
     <string name="wishlist_create">Create wishlist</string>
     <string name="wishlist_name">Name</string>
     <string name="wishlist_description">Description</string>
+    <string name="wishlist_notes">Notes</string>
+    <string name="wishlist_item_url">Url</string>
+    <string name="wishlist_item_price">Price</string>
     <plurals name="wishlist_item_count">
         <item quantity="zero">empty</item>
         <item quantity="one">1 item</item>
         <item quantity="other">%d items</item>
     </plurals>
+    <string name="wishlist_add_item">Add item</string>
 </resources>

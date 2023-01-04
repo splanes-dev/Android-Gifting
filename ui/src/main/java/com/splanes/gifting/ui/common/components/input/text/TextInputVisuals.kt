@@ -1,4 +1,4 @@
-package com.splanes.gifting.ui.common.components.input
+package com.splanes.gifting.ui.common.components.input.text
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -18,7 +18,9 @@ data class TextInputVisuals(
     enum class InputType {
         Text,
         Email,
-        Password
+        Password,
+        Url,
+        Number
     }
 
     fun transformation(isPlainText: Boolean): VisualTransformation {
@@ -32,6 +34,8 @@ data class TextInputVisuals(
     fun keyboardOptions() = KeyboardOptions(
         capitalization = when (inputType) {
             InputType.Text -> KeyboardCapitalization.Sentences
+            InputType.Number,
+            InputType.Url,
             InputType.Email,
             InputType.Password -> KeyboardCapitalization.None
         },
@@ -40,6 +44,8 @@ data class TextInputVisuals(
             InputType.Text -> KeyboardType.Text
             InputType.Email -> KeyboardType.Email
             InputType.Password -> KeyboardType.Password
+            InputType.Url -> KeyboardType.Uri
+            InputType.Number -> KeyboardType.Number
         }
     )
 }

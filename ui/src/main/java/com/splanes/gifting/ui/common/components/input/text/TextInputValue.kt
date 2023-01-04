@@ -1,4 +1,4 @@
-package com.splanes.gifting.ui.common.components.input
+package com.splanes.gifting.ui.common.components.input.text
 
 sealed class TextInputValue(open val text: String? = null) {
 

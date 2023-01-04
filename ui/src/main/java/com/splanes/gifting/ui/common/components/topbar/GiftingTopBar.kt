@@ -1,6 +1,7 @@
 package com.splanes.gifting.ui.common.components.topbar
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
@@ -11,11 +12,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.splanes.gifting.ui.common.components.spacer.row.Spacer
 import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.common.utils.color.withAlpha
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
@@ -26,7 +29,7 @@ import com.splanes.gifting.ui.theme.GiftingTheme
 fun GiftingTopBar(
     title: String,
     actions: @Composable RowScope.() -> Unit = {},
-    navigationIcon: @Composable () -> Unit = {}
+    navigationIcon: (@Composable () -> Unit)? = null
 ) {
     val uiController = rememberSystemUiController()
 
@@ -42,16 +45,25 @@ fun GiftingTopBar(
                 color = colorOf { primaryContainer.withAlpha(.5) },
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text(
-                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 4.dp),
-                    text = title,
-                    style = textStyleOf { headlineLarge },
-                    color = colorOf { onPrimaryContainer }
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    navigationIcon?.let {
+                        navigationIcon.invoke()
+                        Spacer(width = 4.dp)
+                    } ?: Spacer(width = 20.dp)
+                    Text(
+                        modifier = Modifier.padding(
+                            top = 4.dp,
+                            bottom = 4.dp,
+                            end = 20.dp
+                        ),
+                        text = title,
+                        style = textStyleOf { headlineLarge },
+                        color = colorOf { onPrimaryContainer }
+                    )
+                }
             }
         },
-        actions = actions,
-        navigationIcon = navigationIcon
+        actions = actions
     )
 }
 

@@ -5,6 +5,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -28,3 +30,8 @@ fun BottomSheetLayout(
         content = content
     )
 }
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun rememberBottomSheetState(initial: ModalBottomSheetValue = ModalBottomSheetValue.Hidden) =
+    rememberModalBottomSheetState(initialValue = initial)
