@@ -2,7 +2,9 @@ package com.splanes.gifting.ui.feature.wishlists
 
 import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
 import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
+import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistItemRequest
 import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistRequest
+import com.splanes.gifting.domain.feature.list.wishlist.usecase.AddWishlistItemUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.CreateWishlistUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.GetWishlistsUseCase
 import com.splanes.gifting.ui.common.uistate.ErrorVisuals
@@ -90,7 +92,8 @@ data class WishlistsUiViewModelState(
 @HiltViewModel
 class WishlistsViewModel @Inject constructor(
     private val getWishlists: GetWishlistsUseCase,
-    private val createWishlist: CreateWishlistUseCase
+    private val createWishlist: CreateWishlistUseCase,
+    private val addWishlistItem: AddWishlistItemUseCase
 ) : UiViewModel<WishlistsUiState, WishlistsUiViewModelState>(
     WishlistsUiViewModelState()
 ) {
@@ -221,5 +224,39 @@ class WishlistsViewModel @Inject constructor(
     }
 
     fun onCreateWishlistItem(form: WishlistItemFormResultData) {
+        viewModelState.update { state ->
+            state.copy(loading = LoadingVisuals.Visible)
+        }
+        launch {
+            viewModelState.value.wishlist?.let {
+                val request = NewWishlistItemRequest(
+                    wishlist = it,
+                    name = form.name,
+                    description = form.description,
+                    price = form.price,
+                    url = form.url,
+                    notes = form.notes,
+                    categories = form.categories,
+                    tags = form.tags
+                )
+                addWishlistItem(request)
+                    .then { wishlist ->
+                        viewModelState.update { state ->
+                            state.copy(
+                                loading = LoadingVisuals.Hidden,
+                                wishlist = wishlist
+                            )
+                        }
+                    }
+                    .catch {
+                        viewModelState.update { state ->
+                            state.copy(
+                                loading = LoadingVisuals.Hidden
+                                // Todo error
+                            )
+                        }
+                    }
+            }
+        }
     }
 }

@@ -25,10 +25,10 @@ class WishlistRepositoryImpl @Inject constructor(
             wishlists.map { wishlistDto -> wishlistMapper.map(wishlistDto, tags) }
         }
 
-    override suspend fun createWishlist(wishlist: Wishlist): Wishlist =
+    override suspend fun createOrUpdateWishlist(wishlist: Wishlist): Wishlist =
         withContext(Dispatchers.IO) {
             val dto = wishlistMapper.map(wishlist)
-            if (wishlistDataSource.createWishlist(dto)) {
+            if (wishlistDataSource.createOrUpdateWishlist(dto)) {
                 wishlist
             } else {
                 throw GenericException

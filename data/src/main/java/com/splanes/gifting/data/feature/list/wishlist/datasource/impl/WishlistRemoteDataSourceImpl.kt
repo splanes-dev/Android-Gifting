@@ -21,7 +21,7 @@ class WishlistRemoteDataSourceImpl @Inject constructor(
                 }
             }
 
-    override suspend fun createWishlist(wishlist: WishlistDto): Boolean =
+    override suspend fun createOrUpdateWishlist(wishlist: WishlistDto): Boolean =
         database
             .wishlistsRef
             .child(wishlist.id.orEmpty())

@@ -22,6 +22,6 @@ class CreateWishlistUseCase @Inject constructor(
             createdOn = timestamp(),
             updatedOn = timestamp()
         )
-        return repository.createWishlist(wishlist)
+        return repository.createOrUpdateWishlist(wishlist)
     }
 }

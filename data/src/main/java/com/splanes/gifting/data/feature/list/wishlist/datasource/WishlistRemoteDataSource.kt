@@ -6,5 +6,5 @@ interface WishlistRemoteDataSource {
 
     suspend fun getWishlists(): List<WishlistDto>
 
-    suspend fun createWishlist(wishlist: WishlistDto): Boolean
+    suspend fun createOrUpdateWishlist(wishlist: WishlistDto): Boolean
 }

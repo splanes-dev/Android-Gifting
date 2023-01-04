@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface WishlistRepository : UidRepository {
     suspend fun getWishlists(): List<Wishlist>
-    suspend fun createWishlist(wishlist: Wishlist): Wishlist
+    suspend fun createOrUpdateWishlist(wishlist: Wishlist): Wishlist
     suspend fun observeWishlists(): Flow<List<Wishlist>>
 }
