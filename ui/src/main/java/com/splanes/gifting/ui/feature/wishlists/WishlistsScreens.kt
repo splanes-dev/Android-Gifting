@@ -222,16 +222,30 @@ fun EmptyWishlistOpenedScreen(
                     )
                 }
             ) { innerPaddings ->
-                Box(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPaddings)
+                        .padding(innerPaddings),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    Weight(.5)
+
+                    EmptyState(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentHeight(),
+                        title = stringResource(id = R.string.wishlist_items_empty_title),
+                        description = stringResource(id = R.string.wishlist_items_empty_description)
+                    )
+
+                    Weight()
+
                     GiftingButton(
-                        text = "Create item"
-                    ) {
-                        onNewItemClick()
-                    }
+                        text = stringResource(id = R.string.wishlist_add_item),
+                        onClick = onNewItemClick
+                    )
+
+                    Weight(.5)
                 }
             }
         }
