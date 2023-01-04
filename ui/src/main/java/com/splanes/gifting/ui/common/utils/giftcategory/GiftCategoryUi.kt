@@ -1,4 +1,4 @@
-package com.splanes.gifting.ui.common.utils.giftcategory
+package com.splanes.gifting.ui.common.utils.giftcategory // ktlint-disable filename
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AutoStories
