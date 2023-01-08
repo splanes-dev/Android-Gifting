@@ -35,3 +35,6 @@ fun BottomSheetLayout(
 @Composable
 fun rememberBottomSheetState(initial: ModalBottomSheetValue = ModalBottomSheetValue.Hidden) =
     rememberModalBottomSheetState(initialValue = initial)
+
+@OptIn(ExperimentalMaterialApi::class)
+suspend fun ModalBottomSheetState.expand() = animateTo(targetValue = ModalBottomSheetValue.Expanded)

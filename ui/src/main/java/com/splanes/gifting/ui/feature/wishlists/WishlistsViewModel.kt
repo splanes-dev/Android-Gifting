@@ -21,9 +21,6 @@ data class WishlistsUiViewModelState(
     private val loading: LoadingVisuals = LoadingVisuals.Hidden,
     val wishlists: List<Wishlist> = emptyList(),
     val wishlist: Wishlist? = null,
-    private val isNewWishlistOpen: Boolean = false,
-    private val isNewItemOpen: Boolean = false,
-    private val isDeleteOpen: Boolean = false,
     val wishlistsSelected: List<Wishlist> = emptyList(),
     val wishlistItemsSelected: List<WishlistItem> = emptyList()
 ) : UiViewModelState<WishlistsUiState> {
@@ -36,15 +33,13 @@ data class WishlistsUiViewModelState(
                             WishlistsUiState.WishlistOpen(
                                 loading = loading,
                                 error = error,
-                                wishlist = wishlist,
-                                isNewItemOpen = isNewItemOpen
+                                wishlist = wishlist
                             )
                         } else {
                             WishlistsUiState.WishlistOpenEditing(
                                 loading = loading,
                                 error = error,
                                 wishlist = wishlist,
-                                isDeleteDialogOpen = isDeleteOpen,
                                 itemsSelected = wishlistItemsSelected
                             )
                         }
@@ -54,8 +49,7 @@ data class WishlistsUiViewModelState(
                         WishlistsUiState.EmptyWishlistOpen(
                             loading = loading,
                             error = error,
-                            wishlist = wishlist,
-                            isNewItemOpen = isNewItemOpen
+                            wishlist = wishlist
                         )
                 }
             }
@@ -65,16 +59,14 @@ data class WishlistsUiViewModelState(
                     WishlistsUiState.Wishlists(
                         loading = loading,
                         error = error,
-                        wishlists = wishlists,
-                        isNewWishlistOpen = isNewWishlistOpen
+                        wishlists = wishlists
                     )
                 } else {
                     WishlistsUiState.WishlistsEditing(
                         loading = loading,
                         error = error,
                         wishlists = wishlists,
-                        wishlistsSelected = wishlistsSelected,
-                        isDeleteDialogOpen = isDeleteOpen
+                        wishlistsSelected = wishlistsSelected
                     )
                 }
             }
@@ -82,8 +74,7 @@ data class WishlistsUiViewModelState(
             else -> {
                 WishlistsUiState.EmptyWishlists(
                     loading = loading,
-                    error = error,
-                    isNewWishlistOpen = isNewWishlistOpen
+                    error = error
                 )
             }
         }
@@ -123,28 +114,9 @@ class WishlistsViewModel @Inject constructor(
         }
     }
 
-    fun onNewWishlist() {
-        viewModelState.update { state -> state.copy(isNewWishlistOpen = true) }
-    }
-
-    fun onNewWishlistItem() {
-        viewModelState.update { state -> state.copy(isNewItemOpen = true) }
-    }
-
-    fun onDismissNewWishlist() {
-        viewModelState.update { state -> state.copy(isNewWishlistOpen = false) }
-    }
-
-    fun onDismissNewWishlistItem() {
-        viewModelState.update { state -> state.copy(isNewItemOpen = false) }
-    }
-
     fun onCreateWishlist(request: NewWishlistRequest) {
         viewModelState.update { state ->
-            state.copy(
-                loading = LoadingVisuals.Visible,
-                isNewWishlistOpen = false
-            )
+            state.copy(loading = LoadingVisuals.Visible)
         }
         launch {
             createWishlist(request)
@@ -169,14 +141,6 @@ class WishlistsViewModel @Inject constructor(
 
     fun openWishlist(wishlist: Wishlist) {
         viewModelState.update { state -> state.copy(wishlist = wishlist) }
-    }
-
-    fun openDeleteWishlistDialog() {
-        viewModelState.update { state -> state.copy(isDeleteOpen = true) }
-    }
-
-    fun openDeleteWishlistItemDialog() {
-        viewModelState.update { state -> state.copy(isDeleteOpen = true) }
     }
 
     fun onDeleteWishlist(wishlist: Wishlist) {
@@ -244,7 +208,10 @@ class WishlistsViewModel @Inject constructor(
                         viewModelState.update { state ->
                             state.copy(
                                 loading = LoadingVisuals.Hidden,
-                                wishlist = wishlist
+                                wishlist = wishlist,
+                                wishlists = state.wishlists.filter { w ->
+                                    w.id != wishlist.id
+                                } + wishlist
                             )
                         }
                     }

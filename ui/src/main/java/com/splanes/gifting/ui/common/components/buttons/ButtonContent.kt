@@ -5,6 +5,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.splanes.gifting.ui.common.components.spacer.row.Spacer
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
@@ -13,7 +14,8 @@ import com.splanes.gifting.ui.common.utils.typography.textStyleOf
 internal fun RowScope.ButtonContent(
     text: String,
     leadingIcon: ImageVector?,
-    trailingIcon: ImageVector?
+    trailingIcon: ImageVector?,
+    textStyle: TextStyle = textStyleOf { titleMedium }
 ) {
     leadingIcon?.let {
         Spacer(width = 8.dp)
@@ -25,7 +27,7 @@ internal fun RowScope.ButtonContent(
     }
     Text(
         text = text,
-        style = textStyleOf { titleMedium },
+        style = textStyle,
         maxLines = 1
     )
     trailingIcon?.let {

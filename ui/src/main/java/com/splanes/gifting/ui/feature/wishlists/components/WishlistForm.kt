@@ -4,6 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.NoteAlt
+import androidx.compose.material.icons.rounded.ReceiptLong
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
@@ -29,15 +32,23 @@ import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
 import kotlinx.coroutines.launch
 
+sealed interface OnWishlistFormButtonClick {
+    class Create(val onCreate: (NewWishlistRequest) -> Unit) : OnWishlistFormButtonClick
+
+    class Edit(val onEdit: (/* todo */) -> Unit) : OnWishlistFormButtonClick
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WishlistCreateForm(
-    onCreate: (NewWishlistRequest) -> Unit,
+fun WishlistForm(
+    initialName: String = "",
+    initialDescription: String = "",
+    onButtonClick: OnWishlistFormButtonClick,
     onDismiss: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val wishlistNameState = rememberTextInputState()
-    val wishlistDescriptionState = rememberTextInputState()
+    val wishlistNameState = rememberTextInputState(initialName)
+    val wishlistDescriptionState = rememberTextInputState(initialDescription)
     val wishlistNameValidators = listOf(
         TextInputValidator.of(
             regex = TextInputValidator.NotBlank,
@@ -60,6 +71,7 @@ fun WishlistCreateForm(
             state = wishlistNameState,
             visuals = TextInputVisuals(
                 label = stringResource(id = R.string.wishlist_name),
+                leadingIcon = Icons.Rounded.ReceiptLong,
                 imeAction = ImeAction.Next
             )
         )
@@ -69,7 +81,8 @@ fun WishlistCreateForm(
         TextInput(
             state = wishlistDescriptionState,
             visuals = TextInputVisuals(
-                label = stringResource(id = R.string.wishlist_description)
+                label = stringResource(id = R.string.wishlist_description),
+                leadingIcon = Icons.Rounded.NoteAlt
             )
         )
 
@@ -90,12 +103,18 @@ fun WishlistCreateForm(
                     coroutineScope.launch {
                         val isValid = wishlistNameState.validate(wishlistNameValidators)
                         if (isValid) {
-                            onCreate(
-                                NewWishlistRequest(
-                                    name = wishlistNameState.inputValue.text.orEmpty(),
-                                    description = wishlistDescriptionState.inputValue.text
-                                )
-                            )
+                            when (onButtonClick) {
+                                is OnWishlistFormButtonClick.Create -> {
+                                    onButtonClick.onCreate(
+                                        NewWishlistRequest(
+                                            name = wishlistNameState.inputValue.text.orEmpty(),
+                                            description = wishlistDescriptionState.inputValue.text
+                                        )
+                                    )
+                                }
+
+                                is OnWishlistFormButtonClick.Edit -> TODO()
+                            }
                         }
                     }
                 }

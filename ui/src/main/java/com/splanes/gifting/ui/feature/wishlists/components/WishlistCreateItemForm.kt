@@ -7,6 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Euro
+import androidx.compose.material.icons.rounded.NoteAlt
+import androidx.compose.material.icons.rounded.Notes
+import androidx.compose.material.icons.rounded.Sell
+import androidx.compose.material.icons.rounded.TravelExplore
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -79,6 +85,7 @@ fun WishlistCreateItemForm(
             state = nameState,
             visuals = TextInputVisuals(
                 label = stringResource(id = R.string.wishlist_name),
+                leadingIcon = Icons.Rounded.Sell,
                 imeAction = ImeAction.Next
             )
         )
@@ -89,6 +96,7 @@ fun WishlistCreateItemForm(
             state = descriptionState,
             visuals = TextInputVisuals(
                 label = stringResource(id = R.string.wishlist_description),
+                leadingIcon = Icons.Rounded.NoteAlt,
                 imeAction = ImeAction.Next
             )
         )
@@ -100,6 +108,7 @@ fun WishlistCreateItemForm(
             visuals = TextInputVisuals(
                 label = stringResource(id = R.string.wishlist_item_url),
                 inputType = TextInputVisuals.InputType.Url,
+                leadingIcon = Icons.Rounded.TravelExplore,
                 imeAction = ImeAction.Next
             )
         )
@@ -111,6 +120,7 @@ fun WishlistCreateItemForm(
             visuals = TextInputVisuals(
                 label = stringResource(id = R.string.wishlist_item_price),
                 inputType = TextInputVisuals.InputType.Number,
+                leadingIcon = Icons.Rounded.Euro,
                 imeAction = ImeAction.Next
             )
         )
@@ -125,6 +135,7 @@ fun WishlistCreateItemForm(
             state = notesState,
             visuals = TextInputVisuals(
                 label = stringResource(id = R.string.wishlist_notes),
+                leadingIcon = Icons.Rounded.Notes,
                 imeAction = ImeAction.Next
             )
         )

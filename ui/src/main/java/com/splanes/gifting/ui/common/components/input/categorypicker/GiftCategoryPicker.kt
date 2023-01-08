@@ -2,7 +2,6 @@ package com.splanes.gifting.ui.common.components.input.categorypicker
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.BorderStroke
@@ -19,7 +18,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.Category
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -90,8 +89,8 @@ fun GiftCategoryPicker(
                 .padding(start = 12.dp)
                 .align(Alignment.TopStart),
             visible = state.itemsSelected.isNotEmpty(),
-            enter = fadeIn(animationSpec = tween(300)),
-            exit = fadeOut(animationSpec = tween(300))
+            enter = fadeIn(),
+            exit = fadeOut()
         ) {
             Text(
                 modifier = Modifier
@@ -147,25 +146,26 @@ private fun GiftCategoryPickerItem(category: GiftCategory) {
 private fun GiftCategoryPickerEmpty(visible: Boolean) {
     AnimatedVisibility(
         visible = visible,
-        enter = fadeIn(animationSpec = tween(durationMillis = 500)),
-        exit = fadeOut(animationSpec = tween(durationMillis = 300))
+        enter = fadeIn(),
+        exit = fadeOut()
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 8.dp)
+                .padding(bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = Icons.Rounded.AddCircle,
+                imageVector = Icons.Rounded.Category,
                 contentDescription = null,
-                tint = colorOf { primary }
+                tint = colorOf { onSurface.withAlpha(.7) }
             )
 
             Spacer(width = 16.dp)
 
             Text(
-                text = stringResource(id = R.string.category_picker_add_item),
-                style = textStyleOf { bodyLarge },
+                text = stringResource(id = R.string.category_picker_title),
+                style = textStyleOf { bodyMedium },
                 color = colorOf { onSurface.withAlpha(.7) }
             )
 

@@ -15,10 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.splanes.gifting.ui.common.utils.typography.textStyleOf
 import com.splanes.gifting.ui.theme.GiftingTheme
 
 @Composable
@@ -27,6 +29,7 @@ fun GiftingTextButton(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
+    textStyle: TextStyle = textStyleOf { titleMedium },
     colors: ButtonColors = ButtonDefaults.textButtonColors(),
     onClick: () -> Unit
 ) {
@@ -35,7 +38,12 @@ fun GiftingTextButton(
         onClick = onClick,
         colors = colors
     ) {
-        ButtonContent(text = text, leadingIcon = leadingIcon, trailingIcon = trailingIcon)
+        ButtonContent(
+            text = text,
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            textStyle = textStyle
+        )
     }
 }
 
