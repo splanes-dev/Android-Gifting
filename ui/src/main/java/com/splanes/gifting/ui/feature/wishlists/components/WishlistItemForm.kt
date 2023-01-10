@@ -7,31 +7,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Euro
-import androidx.compose.material.icons.rounded.NoteAlt
-import androidx.compose.material.icons.rounded.Notes
-import androidx.compose.material.icons.rounded.Sell
-import androidx.compose.material.icons.rounded.TravelExplore
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.splanes.gifting.domain.feature.list.model.GiftCategory
 import com.splanes.gifting.ui.R
 import com.splanes.gifting.ui.common.components.buttons.GiftingButton
 import com.splanes.gifting.ui.common.components.buttons.GiftingTextButton
-import com.splanes.gifting.ui.common.components.input.categorypicker.GiftCategoryPicker
 import com.splanes.gifting.ui.common.components.input.categorypicker.rememberGiftCategoryPickerState
 import com.splanes.gifting.ui.common.components.input.text.NotBlank
-import com.splanes.gifting.ui.common.components.input.text.TextInput
 import com.splanes.gifting.ui.common.components.input.text.TextInputValidator
-import com.splanes.gifting.ui.common.components.input.text.TextInputVisuals
 import com.splanes.gifting.ui.common.components.input.text.of
 import com.splanes.gifting.ui.common.components.input.text.rememberTextInputState
 import com.splanes.gifting.ui.common.components.spacer.column.Spacer
@@ -41,20 +31,25 @@ import com.splanes.gifting.ui.feature.wishlists.model.WishlistItemFormResultData
 import com.splanes.gifting.ui.theme.GiftingTheme
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WishlistCreateItemForm(
-    onCreate: (WishlistItemFormResultData) -> Unit,
-    onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+fun WishlistItemForm(
+    modifier: Modifier = Modifier,
+    initialName: String = "",
+    initialDescription: String = "",
+    initialPrice: String = "",
+    initialUrl: String = "",
+    initialNotes: String = "",
+    initialCategories: List<GiftCategory> = emptyList(),
+    onButtonClick: (WishlistItemFormResultData) -> Unit,
+    onDismiss: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
-    val nameState = rememberTextInputState()
-    val priceState = rememberTextInputState()
-    val descriptionState = rememberTextInputState()
-    val urlState = rememberTextInputState()
-    val notesState = rememberTextInputState()
-    val categoryPickerState = rememberGiftCategoryPickerState()
+    val nameState = rememberTextInputState(initialName)
+    val priceState = rememberTextInputState(initialPrice)
+    val descriptionState = rememberTextInputState(initialDescription)
+    val urlState = rememberTextInputState(initialUrl)
+    val notesState = rememberTextInputState(initialNotes)
+    val categoryPickerState = rememberGiftCategoryPickerState(initialCategories)
     val nameValidators = listOf(
         TextInputValidator.of(
             regex = TextInputValidator.NotBlank,
@@ -81,63 +76,13 @@ fun WishlistCreateItemForm(
 
         Spacer(height = 16.dp)
 
-        TextInput(
-            state = nameState,
-            visuals = TextInputVisuals(
-                label = stringResource(id = R.string.wishlist_name),
-                leadingIcon = Icons.Rounded.Sell,
-                imeAction = ImeAction.Next
-            )
-        )
-
-        Spacer(height = 8.dp)
-
-        TextInput(
-            state = descriptionState,
-            visuals = TextInputVisuals(
-                label = stringResource(id = R.string.wishlist_description),
-                leadingIcon = Icons.Rounded.NoteAlt,
-                imeAction = ImeAction.Next
-            )
-        )
-
-        Spacer(height = 8.dp)
-
-        TextInput(
-            state = urlState,
-            visuals = TextInputVisuals(
-                label = stringResource(id = R.string.wishlist_item_url),
-                inputType = TextInputVisuals.InputType.Url,
-                leadingIcon = Icons.Rounded.TravelExplore,
-                imeAction = ImeAction.Next
-            )
-        )
-
-        Spacer(height = 8.dp)
-
-        TextInput(
-            state = priceState,
-            visuals = TextInputVisuals(
-                label = stringResource(id = R.string.wishlist_item_price),
-                inputType = TextInputVisuals.InputType.Number,
-                leadingIcon = Icons.Rounded.Euro,
-                imeAction = ImeAction.Next
-            )
-        )
-
-        Spacer(height = 8.dp)
-
-        GiftCategoryPicker(state = categoryPickerState)
-
-        Spacer(height = 8.dp)
-
-        TextInput(
-            state = notesState,
-            visuals = TextInputVisuals(
-                label = stringResource(id = R.string.wishlist_notes),
-                leadingIcon = Icons.Rounded.Notes,
-                imeAction = ImeAction.Next
-            )
+        WishlistItemFields(
+            nameState = nameState,
+            descriptionState = descriptionState,
+            priceState = priceState,
+            urlState = urlState,
+            categoryPickerState = categoryPickerState,
+            notesState = notesState
         )
 
         Spacer(height = 16.dp)
@@ -168,7 +113,7 @@ fun WishlistCreateItemForm(
                             notes = notesState.inputValue.text,
                             tags = emptyList() // Todo Tags
                         )
-                        onCreate(result)
+                        onButtonClick(result)
                     }
                 }
             }
@@ -184,8 +129,8 @@ fun WishlistCreateItemForm(
 @Composable
 private fun WishlistCreateItemFormPreview() {
     GiftingTheme {
-        WishlistCreateItemForm(
-            onCreate = { },
+        WishlistItemForm(
+            onButtonClick = { },
             onDismiss = { }
         )
     }

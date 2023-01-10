@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.West
@@ -20,6 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
+import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
 import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistRequest
 import com.splanes.gifting.ui.R
 import com.splanes.gifting.ui.common.components.bottomsheet.BottomSheetLayout
@@ -28,14 +31,17 @@ import com.splanes.gifting.ui.common.components.bottomsheet.rememberBottomSheetS
 import com.splanes.gifting.ui.common.components.buttons.GiftingButton
 import com.splanes.gifting.ui.common.components.buttons.GiftingIconButton
 import com.splanes.gifting.ui.common.components.emptystate.EmptyState
+import com.splanes.gifting.ui.common.components.input.categorypicker.rememberGiftCategoryPickerState
+import com.splanes.gifting.ui.common.components.input.text.rememberTextInputState
 import com.splanes.gifting.ui.common.components.loader.LoaderScaffold
 import com.splanes.gifting.ui.common.components.spacer.column.Weight
 import com.splanes.gifting.ui.common.components.topbar.GiftingTopBar
 import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.common.utils.url.openUrl
 import com.splanes.gifting.ui.feature.wishlists.components.OnWishlistFormButtonClick
-import com.splanes.gifting.ui.feature.wishlists.components.WishlistCreateItemForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistForm
+import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemFields
+import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemsList
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistsGrid
 import com.splanes.gifting.ui.feature.wishlists.model.WishlistItemFormResultData
@@ -51,20 +57,15 @@ fun WishlistsEmptyScreen(
     val coroutineScope = rememberCoroutineScope()
 
     LoaderScaffold(uiState = uiState) {
-        BottomSheetLayout(
-            state = bottomSheetState,
-            modalContent = {
-                WishlistForm(
-                    onButtonClick = OnWishlistFormButtonClick.Create(onCreateWishlist),
-                    onDismiss = { coroutineScope.launch { bottomSheetState.hide() } }
-                )
-            }
-        ) {
-            Scaffold(
-                topBar = {
-                    GiftingTopBar(title = stringResource(id = R.string.wishlists))
-                }
-            ) { innerPaddings ->
+        BottomSheetLayout(state = bottomSheetState, modalContent = {
+            WishlistForm(
+                onButtonClick = OnWishlistFormButtonClick.Create(onCreateWishlist),
+                onDismiss = { coroutineScope.launch { bottomSheetState.hide() } }
+            )
+        }) {
+            Scaffold(topBar = {
+                GiftingTopBar(title = stringResource(id = R.string.wishlists))
+            }) { innerPaddings ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -107,20 +108,15 @@ fun WishlistGridScreen(
     val coroutineScope = rememberCoroutineScope()
 
     LoaderScaffold(uiState = uiState) {
-        BottomSheetLayout(
-            state = bottomSheetState,
-            modalContent = {
-                WishlistForm(
-                    onButtonClick = OnWishlistFormButtonClick.Create(onCreateWishlist),
-                    onDismiss = { coroutineScope.launch { bottomSheetState.hide() } }
-                )
-            }
-        ) {
-            Scaffold(
-                topBar = {
-                    GiftingTopBar(title = stringResource(id = R.string.wishlists))
-                }
-            ) { innerPaddings ->
+        BottomSheetLayout(state = bottomSheetState, modalContent = {
+            WishlistForm(
+                onButtonClick = OnWishlistFormButtonClick.Create(onCreateWishlist),
+                onDismiss = { coroutineScope.launch { bottomSheetState.hide() } }
+            )
+        }) {
+            Scaffold(topBar = {
+                GiftingTopBar(title = stringResource(id = R.string.wishlists))
+            }) { innerPaddings ->
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -158,30 +154,22 @@ fun EmptyWishlistOpenedScreen(
     val coroutineScope = rememberCoroutineScope()
 
     LoaderScaffold(uiState = uiState) {
-        BottomSheetLayout(
-            state = bottomSheetState,
-            modalContent = {
-                WishlistCreateItemForm(
-                    modifier = Modifier.padding(horizontal = 16.dp),
-                    onCreate = onCreateItem,
-                    onDismiss = { coroutineScope.launch { bottomSheetState.hide() } }
-                )
-            }
-        ) {
-            Scaffold(
-                topBar = {
-                    GiftingTopBar(
-                        title = wishlist.name,
-                        navigationIcon = {
-                            GiftingIconButton(
-                                imageVector = Icons.Rounded.West,
-                                tint = colorOf { onPrimaryContainer },
-                                onClick = onCloseWishlist
-                            )
-                        }
+        BottomSheetLayout(state = bottomSheetState, modalContent = {
+            WishlistItemForm(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                onButtonClick = onCreateItem,
+                onDismiss = { coroutineScope.launch { bottomSheetState.hide() } }
+            )
+        }) {
+            Scaffold(topBar = {
+                GiftingTopBar(title = wishlist.name, navigationIcon = {
+                    GiftingIconButton(
+                        imageVector = Icons.Rounded.West,
+                        tint = colorOf { onPrimaryContainer },
+                        onClick = onCloseWishlist
                     )
-                }
-            ) { innerPaddings ->
+                })
+            }) { innerPaddings ->
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -217,6 +205,7 @@ fun EmptyWishlistOpenedScreen(
 fun WishlistOpenedScreen(
     uiState: WishlistsUiState.WishlistOpen,
     onCreateItem: (WishlistItemFormResultData) -> Unit,
+    onWishlistItemClick: (WishlistItem) -> Unit,
     onCloseWishlist: () -> Unit
 ) {
     val wishlist = uiState.wishlist
@@ -228,27 +217,22 @@ fun WishlistOpenedScreen(
         BottomSheetLayout(
             state = bottomSheetState,
             modalContent = {
-                WishlistCreateItemForm(
+                WishlistItemForm(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    onCreate = onCreateItem,
+                    onButtonClick = onCreateItem,
                     onDismiss = { coroutineScope.launch { bottomSheetState.hide() } }
                 )
             }
         ) {
-            Scaffold(
-                topBar = {
-                    GiftingTopBar(
-                        title = wishlist.name,
-                        navigationIcon = {
-                            GiftingIconButton(
-                                imageVector = Icons.Rounded.West,
-                                tint = colorOf { onPrimaryContainer },
-                                onClick = onCloseWishlist
-                            )
-                        }
+            Scaffold(topBar = {
+                GiftingTopBar(title = wishlist.name, navigationIcon = {
+                    GiftingIconButton(
+                        imageVector = Icons.Rounded.West,
+                        tint = colorOf { onPrimaryContainer },
+                        onClick = onCloseWishlist
                     )
-                }
-            ) { innerPaddings ->
+                })
+            }) { innerPaddings ->
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -259,7 +243,7 @@ fun WishlistOpenedScreen(
                             .fillMaxSize()
                             .padding(bottom = 48.dp),
                         items = wishlist.items,
-                        onItemClick = { /* todo */ },
+                        onItemClick = onWishlistItemClick,
                         onUrlClick = { url -> context.openUrl(url) }
                     )
 
@@ -272,6 +256,43 @@ fun WishlistOpenedScreen(
                     )
                 }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WishlistItemOpenedScreen(
+    uiState: WishlistsUiState.WishlistItemOpen,
+    onCloseWishlistItem: () -> Unit
+) {
+    val wishlist = uiState.wishlist
+    val item = uiState.item
+    LoaderScaffold(uiState = uiState) {
+        Scaffold(
+            topBar = {
+                GiftingTopBar(title = wishlist.name, navigationIcon = {
+                    GiftingIconButton(
+                        imageVector = Icons.Rounded.West,
+                        tint = colorOf { onPrimaryContainer },
+                        onClick = onCloseWishlistItem
+                    )
+                })
+            }
+        ) { innerPaddings ->
+            WishlistItemFields(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPaddings)
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()),
+                nameState = rememberTextInputState(item.name),
+                descriptionState = rememberTextInputState(item.description.orEmpty()),
+                priceState = rememberTextInputState(item.price?.toString().orEmpty()),
+                urlState = rememberTextInputState(item.url.orEmpty()),
+                categoryPickerState = rememberGiftCategoryPickerState(item.categories),
+                notesState = rememberTextInputState(item.notes.orEmpty())
+            )
         }
     }
 }

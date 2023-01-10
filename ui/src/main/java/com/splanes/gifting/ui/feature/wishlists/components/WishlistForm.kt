@@ -98,7 +98,12 @@ fun WishlistForm(
             Weight()
 
             GiftingButton(
-                text = stringResource(id = R.string.create),
+                text = stringResource(
+                    id = when (onButtonClick) {
+                        is OnWishlistFormButtonClick.Create -> R.string.create
+                        is OnWishlistFormButtonClick.Edit -> R.string.edit
+                    }
+                ),
                 onClick = {
                     coroutineScope.launch {
                         val isValid = wishlistNameState.validate(wishlistNameValidators)

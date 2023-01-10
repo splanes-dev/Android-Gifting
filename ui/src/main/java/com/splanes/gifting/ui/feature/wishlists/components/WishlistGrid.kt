@@ -1,7 +1,6 @@
 package com.splanes.gifting.ui.feature.wishlists.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,10 +10,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ReceiptLong
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -45,13 +47,11 @@ fun WishlistsGrid(
     val listState = rememberLazyListState()
     LazyColumn(
         state = listState,
-        modifier = modifier
+        modifier = modifier.padding(horizontal = 8.dp)
     ) {
         itemsIndexed(wishlists) { index, wishlist ->
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp)
+                modifier = modifier.fillMaxWidth()
             ) {
                 WishlistGridItem(wishlist = wishlist) {
                     onWishlistClick(wishlist)
@@ -62,7 +62,7 @@ fun WishlistsGrid(
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(1.dp),
-                        color = colorOf { primary.withAlpha(.3) }
+                        color = colorOf { primary.withAlpha(.1) }
                     )
                 }
             }
@@ -70,55 +70,60 @@ fun WishlistsGrid(
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WishlistGridItem(
     wishlist: Wishlist,
     onClick: () -> Unit
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        verticalAlignment = Alignment.CenterVertically
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(8.dp)
     ) {
-        Icon(
-            modifier = Modifier.size(40.dp),
-            imageVector = Icons.Rounded.ReceiptLong,
-            contentDescription = wishlist.name,
-            tint = colorOf { tertiary.withAlpha(.7) }
-        )
-
-        Spacer(width = 16.dp)
-
-        Column {
-            Text(
-                text = wishlist.name,
-                style = textStyleOf { titleLarge }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                modifier = Modifier.size(40.dp),
+                imageVector = Icons.Rounded.ReceiptLong,
+                contentDescription = wishlist.name,
+                tint = colorOf { tertiary.withAlpha(.7) }
             )
-            wishlist.description.takeIf { !it.isNullOrBlank() }?.let { description ->
-                Spacer(height = 4.dp)
+
+            Spacer(width = 16.dp)
+
+            Column {
                 Text(
-                    text = description,
-                    style = textStyleOf { bodySmall },
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    text = wishlist.name,
+                    style = textStyleOf { titleLarge }
                 )
+                wishlist.description.takeIf { !it.isNullOrBlank() }?.let { description ->
+                    Spacer(height = 4.dp)
+                    Text(
+                        text = description,
+                        style = textStyleOf { bodySmall },
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             }
+
+            Weight()
+
+            Text(
+                text = pluralStringResource(
+                    id = R.plurals.wishlist_item_count,
+                    wishlist.items.count(),
+                    wishlist.items.count()
+                ),
+                style = textStyleOf { labelMedium },
+                color = colorOf { onSurface.withAlpha(.7) }
+
+            )
         }
-
-        Weight()
-
-        Text(
-            text = pluralStringResource(
-                id = R.plurals.wishlist_item_count,
-                wishlist.items.count(),
-                wishlist.items.count()
-            ),
-            style = textStyleOf { labelMedium },
-            color = colorOf { onSurface.withAlpha(.7) }
-
-        )
     }
 }
 

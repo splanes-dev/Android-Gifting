@@ -18,6 +18,7 @@ fun WishlistsRoute(viewModel: WishlistsViewModel) {
         uiState = uiState,
         onCreateWishlist = viewModel::onCreateWishlist,
         onWishlistClick = viewModel::openWishlist,
+        onWishlistItemClick = viewModel::openWishlistItem,
         onDeleteWishlistConfirmation = viewModel::onDeleteWishlist,
         onDeleteWishlistItemConfirmation = viewModel::onDeleteWishlistItem,
         onSelectWishlist = viewModel::onSelectWishlist,
@@ -25,6 +26,7 @@ fun WishlistsRoute(viewModel: WishlistsViewModel) {
         onSelectWishlistItem = viewModel::onSelectWishlistItem,
         onUnselectWishlistItem = viewModel::onUnselectWishlistItem,
         onCloseWishlist = viewModel::onCloseWishlist,
+        onCloseWishlistItem = viewModel::onCloseWishlistItem,
         onCreateWishlistItem = viewModel::onCreateWishlistItem
     )
 }
@@ -35,13 +37,15 @@ fun WishlistsRoute(
     onCreateWishlist: (NewWishlistRequest) -> Unit,
     onCreateWishlistItem: (WishlistItemFormResultData) -> Unit,
     onWishlistClick: (Wishlist) -> Unit,
+    onWishlistItemClick: (WishlistItem) -> Unit,
     onDeleteWishlistConfirmation: (Wishlist) -> Unit,
     onDeleteWishlistItemConfirmation: (WishlistItem) -> Unit,
     onSelectWishlist: (Wishlist) -> Unit,
     onUnselectWishlist: (Wishlist) -> Unit,
     onSelectWishlistItem: (WishlistItem) -> Unit,
     onUnselectWishlistItem: (WishlistItem) -> Unit,
-    onCloseWishlist: () -> Unit
+    onCloseWishlist: () -> Unit,
+    onCloseWishlistItem: () -> Unit
 ) {
     Crossfade(uiState) { screenUiState ->
         when (screenUiState) {
@@ -73,11 +77,19 @@ fun WishlistsRoute(
                 WishlistOpenedScreen(
                     uiState = screenUiState,
                     onCreateItem = onCreateWishlistItem,
-                    onCloseWishlist = onCloseWishlist
+                    onCloseWishlist = onCloseWishlist,
+                    onWishlistItemClick = onWishlistItemClick
                 )
             }
 
             is WishlistsUiState.WishlistOpenEditing -> {
+            }
+
+            is WishlistsUiState.WishlistItemOpen -> {
+                WishlistItemOpenedScreen(
+                    uiState = screenUiState,
+                    onCloseWishlistItem = onCloseWishlistItem
+                )
             }
         }
     }

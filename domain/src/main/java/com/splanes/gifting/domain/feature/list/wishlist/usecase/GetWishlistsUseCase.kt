@@ -10,5 +10,5 @@ class GetWishlistsUseCase @Inject constructor(
 ) : UseCase<Unit, List<Wishlist>>() {
 
     override suspend fun execute(request: Unit): List<Wishlist> =
-        repository.getWishlists()
+        repository.getWishlists().sortedWith(compareBy { it.createdOn })
 }

@@ -21,6 +21,7 @@ data class WishlistsUiViewModelState(
     private val loading: LoadingVisuals = LoadingVisuals.Hidden,
     val wishlists: List<Wishlist> = emptyList(),
     val wishlist: Wishlist? = null,
+    val itemDetails: WishlistItem? = null,
     val wishlistsSelected: List<Wishlist> = emptyList(),
     val wishlistItemsSelected: List<WishlistItem> = emptyList()
 ) : UiViewModelState<WishlistsUiState> {
@@ -28,6 +29,14 @@ data class WishlistsUiViewModelState(
         when {
             wishlist != null -> {
                 when {
+                    itemDetails != null -> {
+                        WishlistsUiState.WishlistItemOpen(
+                            loading = loading,
+                            error = error,
+                            wishlist = wishlist,
+                            item = itemDetails
+                        )
+                    }
                     wishlist.items.isNotEmpty() -> {
                         if (wishlistItemsSelected.isEmpty()) {
                             WishlistsUiState.WishlistOpen(
@@ -143,6 +152,10 @@ class WishlistsViewModel @Inject constructor(
         viewModelState.update { state -> state.copy(wishlist = wishlist) }
     }
 
+    fun openWishlistItem(item: WishlistItem) {
+        viewModelState.update { state -> state.copy(itemDetails = item) }
+    }
+
     fun onDeleteWishlist(wishlist: Wishlist) {
         // todo
     }
@@ -185,6 +198,10 @@ class WishlistsViewModel @Inject constructor(
 
     fun onCloseWishlist() {
         viewModelState.update { state -> state.copy(wishlist = null) }
+    }
+
+    fun onCloseWishlistItem() {
+        viewModelState.update { state -> state.copy(itemDetails = null) }
     }
 
     fun onCreateWishlistItem(form: WishlistItemFormResultData) {

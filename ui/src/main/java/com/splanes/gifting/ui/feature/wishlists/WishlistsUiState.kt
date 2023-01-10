@@ -43,4 +43,11 @@ sealed interface WishlistsUiState : UiState {
         val itemsSelected: List<WishlistItem> = emptyList(),
         val wishlist: Wishlist
     ) : WishlistsUiState
+
+    data class WishlistItemOpen(
+        override val loading: LoadingVisuals,
+        override val error: ErrorVisuals,
+        val wishlist: Wishlist,
+        val item: WishlistItem
+    ) : WishlistsUiState
 }
