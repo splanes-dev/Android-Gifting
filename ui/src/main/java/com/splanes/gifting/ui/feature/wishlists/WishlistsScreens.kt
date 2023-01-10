@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.West
@@ -31,8 +29,6 @@ import com.splanes.gifting.ui.common.components.bottomsheet.rememberBottomSheetS
 import com.splanes.gifting.ui.common.components.buttons.GiftingButton
 import com.splanes.gifting.ui.common.components.buttons.GiftingIconButton
 import com.splanes.gifting.ui.common.components.emptystate.EmptyState
-import com.splanes.gifting.ui.common.components.input.categorypicker.rememberGiftCategoryPickerState
-import com.splanes.gifting.ui.common.components.input.text.rememberTextInputState
 import com.splanes.gifting.ui.common.components.loader.LoaderScaffold
 import com.splanes.gifting.ui.common.components.spacer.column.Weight
 import com.splanes.gifting.ui.common.components.topbar.GiftingTopBar
@@ -40,7 +36,7 @@ import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.common.utils.url.openUrl
 import com.splanes.gifting.ui.feature.wishlists.components.OnWishlistFormButtonClick
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistForm
-import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemFields
+import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemEditForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemsList
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistsGrid
@@ -264,14 +260,13 @@ fun WishlistOpenedScreen(
 @Composable
 fun WishlistItemOpenedScreen(
     uiState: WishlistsUiState.WishlistItemOpen,
-    onCloseWishlistItem: () -> Unit
+    onCloseWishlistItem: () -> Unit,
+    onUpdateItem: (WishlistItem, WishlistItemFormResultData) -> Unit
 ) {
-    val wishlist = uiState.wishlist
-    val item = uiState.item
     LoaderScaffold(uiState = uiState) {
         Scaffold(
             topBar = {
-                GiftingTopBar(title = wishlist.name, navigationIcon = {
+                GiftingTopBar(title = uiState.wishlist.name, navigationIcon = {
                     GiftingIconButton(
                         imageVector = Icons.Rounded.West,
                         tint = colorOf { onPrimaryContainer },
@@ -280,18 +275,10 @@ fun WishlistItemOpenedScreen(
                 })
             }
         ) { innerPaddings ->
-            WishlistItemFields(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPaddings)
-                    .padding(16.dp)
-                    .verticalScroll(rememberScrollState()),
-                nameState = rememberTextInputState(item.name),
-                descriptionState = rememberTextInputState(item.description.orEmpty()),
-                priceState = rememberTextInputState(item.price?.toString().orEmpty()),
-                urlState = rememberTextInputState(item.url.orEmpty()),
-                categoryPickerState = rememberGiftCategoryPickerState(item.categories),
-                notesState = rememberTextInputState(item.notes.orEmpty())
+            WishlistItemEditForm(
+                modifier = Modifier.padding(innerPaddings),
+                item = uiState.item,
+                onButtonClick = { form -> onUpdateItem(uiState.item, form) }
             )
         }
     }

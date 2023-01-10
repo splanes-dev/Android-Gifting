@@ -26,6 +26,7 @@ import com.splanes.gifting.ui.common.components.input.text.of
 import com.splanes.gifting.ui.common.components.input.text.rememberTextInputState
 import com.splanes.gifting.ui.common.components.spacer.column.Spacer
 import com.splanes.gifting.ui.common.components.spacer.row.Weight
+import com.splanes.gifting.ui.common.utils.primitives.toPrice
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
 import com.splanes.gifting.ui.feature.wishlists.model.WishlistItemFormResultData
 import com.splanes.gifting.ui.theme.GiftingTheme
@@ -107,7 +108,7 @@ fun WishlistItemForm(
                         val result = WishlistItemFormResultData(
                             name = nameState.inputValue.text.orEmpty(),
                             description = descriptionState.inputValue.text,
-                            price = priceState.inputValue.text?.ifBlank { null }?.toDouble(),
+                            price = priceState.inputValue.text?.toPrice(),
                             url = urlState.inputValue.text,
                             categories = categoryPickerState.itemsSelected,
                             notes = notesState.inputValue.text,

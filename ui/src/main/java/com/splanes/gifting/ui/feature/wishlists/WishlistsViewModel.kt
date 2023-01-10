@@ -4,9 +4,11 @@ import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
 import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
 import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistItemRequest
 import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistRequest
+import com.splanes.gifting.domain.feature.list.wishlist.request.UpdateWishlistItemRequest
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.AddWishlistItemUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.CreateWishlistUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.GetWishlistsUseCase
+import com.splanes.gifting.domain.feature.list.wishlist.usecase.UpdateWishlistItemUseCase
 import com.splanes.gifting.ui.common.uistate.ErrorVisuals
 import com.splanes.gifting.ui.common.uistate.LoadingVisuals
 import com.splanes.gifting.ui.common.uistate.UiViewModel
@@ -37,6 +39,7 @@ data class WishlistsUiViewModelState(
                             item = itemDetails
                         )
                     }
+
                     wishlist.items.isNotEmpty() -> {
                         if (wishlistItemsSelected.isEmpty()) {
                             WishlistsUiState.WishlistOpen(
@@ -93,7 +96,8 @@ data class WishlistsUiViewModelState(
 class WishlistsViewModel @Inject constructor(
     private val getWishlists: GetWishlistsUseCase,
     private val createWishlist: CreateWishlistUseCase,
-    private val addWishlistItem: AddWishlistItemUseCase
+    private val addWishlistItem: AddWishlistItemUseCase,
+    private val updateWishlistItem: UpdateWishlistItemUseCase
 ) : UiViewModel<WishlistsUiState, WishlistsUiViewModelState>(
     WishlistsUiViewModelState()
 ) {
@@ -229,6 +233,49 @@ class WishlistsViewModel @Inject constructor(
                                 wishlists = state.wishlists.filter { w ->
                                     w.id != wishlist.id
                                 } + wishlist
+                            )
+                        }
+                    }
+                    .catch {
+                        viewModelState.update { state ->
+                            state.copy(
+                                loading = LoadingVisuals.Hidden
+                                // Todo error
+                            )
+                        }
+                    }
+            }
+        }
+    }
+
+    fun onUpdateWishlistItem(item: WishlistItem, form: WishlistItemFormResultData) {
+        viewModelState.update { state ->
+            state.copy(loading = LoadingVisuals.Visible)
+        }
+        launch {
+            viewModelState.value.wishlist?.let {
+                val request = UpdateWishlistItemRequest(
+                    wishlist = it,
+                    item = item.copy(
+                        name = form.name,
+                        description = form.description,
+                        price = form.price,
+                        url = form.url,
+                        categories = form.categories,
+                        tags = form.tags,
+                        notes = form.notes
+                    )
+                )
+                updateWishlistItem(request)
+                    .then { wishlist ->
+                        viewModelState.update { state ->
+                            state.copy(
+                                loading = LoadingVisuals.Hidden,
+                                wishlist = wishlist,
+                                wishlists = state.wishlists.filter { w ->
+                                    w.id != wishlist.id
+                                } + wishlist,
+                                itemDetails = null
                             )
                         }
                     }

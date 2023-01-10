@@ -27,7 +27,8 @@ fun WishlistsRoute(viewModel: WishlistsViewModel) {
         onUnselectWishlistItem = viewModel::onUnselectWishlistItem,
         onCloseWishlist = viewModel::onCloseWishlist,
         onCloseWishlistItem = viewModel::onCloseWishlistItem,
-        onCreateWishlistItem = viewModel::onCreateWishlistItem
+        onCreateWishlistItem = viewModel::onCreateWishlistItem,
+        onUpdateWishlistItem = viewModel::onUpdateWishlistItem
     )
 }
 
@@ -36,6 +37,7 @@ fun WishlistsRoute(
     uiState: WishlistsUiState,
     onCreateWishlist: (NewWishlistRequest) -> Unit,
     onCreateWishlistItem: (WishlistItemFormResultData) -> Unit,
+    onUpdateWishlistItem: (item: WishlistItem, form: WishlistItemFormResultData) -> Unit,
     onWishlistClick: (Wishlist) -> Unit,
     onWishlistItemClick: (WishlistItem) -> Unit,
     onDeleteWishlistConfirmation: (Wishlist) -> Unit,
@@ -88,7 +90,8 @@ fun WishlistsRoute(
             is WishlistsUiState.WishlistItemOpen -> {
                 WishlistItemOpenedScreen(
                     uiState = screenUiState,
-                    onCloseWishlistItem = onCloseWishlistItem
+                    onCloseWishlistItem = onCloseWishlistItem,
+                    onUpdateItem = onUpdateWishlistItem
                 )
             }
         }

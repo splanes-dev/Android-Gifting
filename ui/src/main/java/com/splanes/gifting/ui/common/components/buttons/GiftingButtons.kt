@@ -53,13 +53,15 @@ fun GiftingButton(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector? = null,
     trailingIcon: ImageVector? = null,
+    enabled: Boolean = true,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
     onClick: () -> Unit
 ) {
     Button(
         modifier = modifier,
         onClick = onClick,
-        colors = colors
+        colors = colors,
+        enabled = enabled
     ) {
         ButtonContent(text = text, leadingIcon = leadingIcon, trailingIcon = trailingIcon)
     }

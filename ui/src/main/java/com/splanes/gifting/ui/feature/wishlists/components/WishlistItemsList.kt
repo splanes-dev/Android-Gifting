@@ -73,7 +73,11 @@ private fun WishlistItemContent(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(
+                        start = 16.dp,
+                        end = 16.dp,
+                        bottom = if (item.url.isNullOrBlank()) 16.dp else 0.dp
+                    ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val categories = item.categories.filter { it != GiftCategory.Undefined }
@@ -90,7 +94,7 @@ private fun WishlistItemContent(
                         Spacer(width = 8.dp)
                     }
                 }
-                if (item.notes != null) {
+                if (!item.notes.isNullOrBlank()) {
                     if (item.categories.isNotEmpty()) {
                         Spacer(width = 12.dp)
 
@@ -157,7 +161,7 @@ private fun WishlistItemBasicInfo(item: WishlistItem) {
 
         item.price?.let { price ->
             Text(
-                text = DecimalFormat("#,##€").format(price),
+                text = DecimalFormat("0.##€").format(price),
                 style = textStyleOf { headlineMedium }
             )
         }
