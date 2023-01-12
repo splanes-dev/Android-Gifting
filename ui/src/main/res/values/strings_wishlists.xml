@@ -23,4 +23,8 @@
         <item quantity="other">%d items</item>
     </plurals>
     <string name="wishlist_add_item">Add item</string>
+    <string name="wishlists_delete_confirmation_title">Delete wishlists</string>
+    <string name="wishlists_delete_confirmation_text">
+        Are you sure to delete the following wishlists?\n\n%s\nThis action cannot be undone.
+    </string>
 </resources>

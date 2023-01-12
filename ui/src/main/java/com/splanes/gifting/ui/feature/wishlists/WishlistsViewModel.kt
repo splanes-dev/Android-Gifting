@@ -7,6 +7,7 @@ import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistReque
 import com.splanes.gifting.domain.feature.list.wishlist.request.UpdateWishlistItemRequest
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.AddWishlistItemUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.CreateWishlistUseCase
+import com.splanes.gifting.domain.feature.list.wishlist.usecase.DeleteWishlistsUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.GetWishlistsUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.UpdateWishlistItemUseCase
 import com.splanes.gifting.ui.common.uistate.ErrorVisuals
@@ -67,7 +68,7 @@ data class WishlistsUiViewModelState(
             }
 
             wishlists.isNotEmpty() -> {
-                if (wishlistItemsSelected.isEmpty()) {
+                if (wishlistsSelected.isEmpty()) {
                     WishlistsUiState.Wishlists(
                         loading = loading,
                         error = error,
@@ -97,12 +98,15 @@ class WishlistsViewModel @Inject constructor(
     private val getWishlists: GetWishlistsUseCase,
     private val createWishlist: CreateWishlistUseCase,
     private val addWishlistItem: AddWishlistItemUseCase,
-    private val updateWishlistItem: UpdateWishlistItemUseCase
-) : UiViewModel<WishlistsUiState, WishlistsUiViewModelState>(
-    WishlistsUiViewModelState()
-) {
+    private val updateWishlistItem: UpdateWishlistItemUseCase,
+    private val deleteWishlists: DeleteWishlistsUseCase
+) : UiViewModel<WishlistsUiState, WishlistsUiViewModelState>(WishlistsUiViewModelState()) {
 
     init {
+        launchGetWishlists()
+    }
+
+    private fun launchGetWishlists() {
         viewModelState.update { state ->
             state.copy(loading = LoadingVisuals.Visible)
         }
@@ -160,8 +164,30 @@ class WishlistsViewModel @Inject constructor(
         viewModelState.update { state -> state.copy(itemDetails = item) }
     }
 
-    fun onDeleteWishlist(wishlist: Wishlist) {
-        // todo
+    fun onDeleteWishlists(wishlists: List<Wishlist>) {
+        viewModelState.update { state ->
+            state.copy(loading = LoadingVisuals.Visible)
+        }
+        launch {
+            deleteWishlists(wishlists)
+                .then { removed ->
+                    viewModelState.update { state ->
+                        state.copy(
+                            loading = LoadingVisuals.Hidden,
+                            wishlists = state.wishlists - removed.toSet(),
+                            wishlistsSelected = state.wishlistsSelected - removed.toSet()
+                        )
+                    }
+                }
+                .catch {
+                    viewModelState.update { state ->
+                        state.copy(
+                            loading = LoadingVisuals.Hidden
+                            // error = todo
+                        )
+                    }
+                }
+        }
     }
 
     fun onDeleteWishlistItem(item: WishlistItem) {

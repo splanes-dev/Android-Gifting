@@ -1,6 +1,6 @@
 package com.splanes.gifting.ui.common.utils.primitives
 
-fun String.ifNotBlank(block: String.() -> Unit) {
+inline fun String.ifNotBlank(block: String.() -> Unit) {
     if (isNotBlank()) block()
 }
 

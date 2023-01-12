@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.West
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -28,6 +29,9 @@ import com.splanes.gifting.ui.common.components.bottomsheet.expand
 import com.splanes.gifting.ui.common.components.bottomsheet.rememberBottomSheetState
 import com.splanes.gifting.ui.common.components.buttons.GiftingButton
 import com.splanes.gifting.ui.common.components.buttons.GiftingIconButton
+import com.splanes.gifting.ui.common.components.dialog.DialogButtonUi
+import com.splanes.gifting.ui.common.components.dialog.GiftingDialog
+import com.splanes.gifting.ui.common.components.dialog.rememberDialogState
 import com.splanes.gifting.ui.common.components.emptystate.EmptyState
 import com.splanes.gifting.ui.common.components.loader.LoaderScaffold
 import com.splanes.gifting.ui.common.components.spacer.column.Weight
@@ -35,6 +39,8 @@ import com.splanes.gifting.ui.common.components.topbar.GiftingTopBar
 import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.common.utils.url.openUrl
 import com.splanes.gifting.ui.feature.wishlists.components.OnWishlistFormButtonClick
+import com.splanes.gifting.ui.feature.wishlists.components.WishlistEditButtons
+import com.splanes.gifting.ui.feature.wishlists.components.WishlistEditGrid
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemEditForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemForm
@@ -98,7 +104,8 @@ fun WishlistsEmptyScreen(
 fun WishlistGridScreen(
     uiState: WishlistsUiState.Wishlists,
     onCreateWishlist: (NewWishlistRequest) -> Unit,
-    onWishlistClick: (Wishlist) -> Unit
+    onWishlistClick: (Wishlist) -> Unit,
+    onWishlistLongClick: (Wishlist) -> Unit
 ) {
     val bottomSheetState = rememberBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
@@ -121,7 +128,8 @@ fun WishlistGridScreen(
                     WishlistsGrid(
                         modifier = Modifier.padding(top = 16.dp),
                         wishlists = uiState.wishlists,
-                        onWishlistClick = onWishlistClick
+                        onWishlistClick = onWishlistClick,
+                        onWishlistLongClick = onWishlistLongClick
                     )
 
                     GiftingButton(
@@ -193,6 +201,70 @@ fun EmptyWishlistOpenedScreen(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WishlistGridEditScreen(
+    uiState: WishlistsUiState.WishlistsEditing,
+    onSelectWishlist: (Wishlist) -> Unit,
+    onUnselectWishlist: (Wishlist) -> Unit,
+    onDeleteWishlist: (List<Wishlist>) -> Unit
+) {
+    val selected = uiState.wishlistsSelected
+    val dialogState = rememberDialogState()
+    LoaderScaffold(uiState = uiState) {
+        Scaffold(topBar = {
+            GiftingTopBar(
+                title = stringResource(id = R.string.wishlists)
+            )
+        }) { innerPaddings ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPaddings)
+            ) {
+                WishlistEditGrid(
+                    modifier = Modifier.padding(top = 16.dp),
+                    wishlists = uiState.wishlists,
+                    selected = selected,
+                    onWishlistClick = { wishlist ->
+                        if (selected.contains(wishlist)) {
+                            onUnselectWishlist(wishlist)
+                        } else {
+                            onSelectWishlist(wishlist)
+                        }
+                    }
+                )
+
+                WishlistEditButtons(
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(16.dp),
+                    editable = selected.count() == 1,
+                    onEdit = { /* todo */ },
+                    onDelete = { dialogState.show() }
+                )
+            }
+        }
+    }
+
+    GiftingDialog(
+        dialogState = dialogState,
+        title = stringResource(id = R.string.wishlists_delete_confirmation_title),
+        confirmButton = DialogButtonUi(
+            text = stringResource(id = R.string.delete),
+            onClick = { onDeleteWishlist(selected) }
+        ),
+        dismissButton = DialogButtonUi(text = stringResource(id = R.string.cancel))
+    ) {
+        Text(
+            text = stringResource(
+                id = R.string.wishlists_delete_confirmation_text,
+                selected.map { it.name }.joinToString(separator = "") { "· $it\n" }
+            )
+        )
     }
 }
 

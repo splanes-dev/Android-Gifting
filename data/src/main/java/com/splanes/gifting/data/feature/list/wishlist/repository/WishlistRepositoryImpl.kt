@@ -35,6 +35,11 @@ class WishlistRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun deleteWishlist(wishlist: Wishlist): Boolean =
+        withContext(Dispatchers.IO) {
+            wishlistDataSource.deleteWishlist(wishlist.id)
+        }
+
     override suspend fun observeWishlists(): Flow<List<Wishlist>> {
         TODO("Not yet implemented")
     }

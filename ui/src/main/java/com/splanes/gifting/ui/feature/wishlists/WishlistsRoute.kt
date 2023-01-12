@@ -19,7 +19,7 @@ fun WishlistsRoute(viewModel: WishlistsViewModel) {
         onCreateWishlist = viewModel::onCreateWishlist,
         onWishlistClick = viewModel::openWishlist,
         onWishlistItemClick = viewModel::openWishlistItem,
-        onDeleteWishlistConfirmation = viewModel::onDeleteWishlist,
+        onDeleteWishlistConfirmation = viewModel::onDeleteWishlists,
         onDeleteWishlistItemConfirmation = viewModel::onDeleteWishlistItem,
         onSelectWishlist = viewModel::onSelectWishlist,
         onUnselectWishlist = viewModel::onUnselectWishlist,
@@ -40,7 +40,7 @@ fun WishlistsRoute(
     onUpdateWishlistItem: (item: WishlistItem, form: WishlistItemFormResultData) -> Unit,
     onWishlistClick: (Wishlist) -> Unit,
     onWishlistItemClick: (WishlistItem) -> Unit,
-    onDeleteWishlistConfirmation: (Wishlist) -> Unit,
+    onDeleteWishlistConfirmation: (List<Wishlist>) -> Unit,
     onDeleteWishlistItemConfirmation: (WishlistItem) -> Unit,
     onSelectWishlist: (Wishlist) -> Unit,
     onUnselectWishlist: (Wishlist) -> Unit,
@@ -61,39 +61,42 @@ fun WishlistsRoute(
                 WishlistGridScreen(
                     uiState = screenUiState,
                     onCreateWishlist = onCreateWishlist,
-                    onWishlistClick = onWishlistClick
+                    onWishlistClick = onWishlistClick,
+                    onWishlistLongClick = onSelectWishlist
                 )
 
-            is WishlistsUiState.WishlistsEditing -> {
-            }
+            is WishlistsUiState.WishlistsEditing ->
+                WishlistGridEditScreen(
+                    uiState = screenUiState,
+                    onSelectWishlist = onSelectWishlist,
+                    onUnselectWishlist = onUnselectWishlist,
+                    onDeleteWishlist = onDeleteWishlistConfirmation
+                )
 
-            is WishlistsUiState.EmptyWishlistOpen -> {
+            is WishlistsUiState.EmptyWishlistOpen ->
                 EmptyWishlistOpenedScreen(
                     uiState = screenUiState,
                     onCreateItem = onCreateWishlistItem,
                     onCloseWishlist = onCloseWishlist
                 )
-            }
 
-            is WishlistsUiState.WishlistOpen -> {
+            is WishlistsUiState.WishlistOpen ->
                 WishlistOpenedScreen(
                     uiState = screenUiState,
                     onCreateItem = onCreateWishlistItem,
                     onCloseWishlist = onCloseWishlist,
                     onWishlistItemClick = onWishlistItemClick
                 )
-            }
 
             is WishlistsUiState.WishlistOpenEditing -> {
             }
 
-            is WishlistsUiState.WishlistItemOpen -> {
+            is WishlistsUiState.WishlistItemOpen ->
                 WishlistItemOpenedScreen(
                     uiState = screenUiState,
                     onCloseWishlistItem = onCloseWishlistItem,
                     onUpdateItem = onUpdateWishlistItem
                 )
-            }
         }
     }
 }
