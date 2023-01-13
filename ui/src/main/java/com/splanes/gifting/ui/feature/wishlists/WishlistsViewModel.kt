@@ -5,15 +5,18 @@ import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
 import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistItemRequest
 import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistRequest
 import com.splanes.gifting.domain.feature.list.wishlist.request.UpdateWishlistItemRequest
+import com.splanes.gifting.domain.feature.list.wishlist.request.UpdateWishlistRequest
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.AddWishlistItemUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.CreateWishlistUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.DeleteWishlistsUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.GetWishlistsUseCase
 import com.splanes.gifting.domain.feature.list.wishlist.usecase.UpdateWishlistItemUseCase
+import com.splanes.gifting.domain.feature.list.wishlist.usecase.UpdateWishlistUseCase
 import com.splanes.gifting.ui.common.uistate.ErrorVisuals
 import com.splanes.gifting.ui.common.uistate.LoadingVisuals
 import com.splanes.gifting.ui.common.uistate.UiViewModel
 import com.splanes.gifting.ui.common.uistate.UiViewModelState
+import com.splanes.gifting.ui.feature.wishlists.model.WishlistFormResultData
 import com.splanes.gifting.ui.feature.wishlists.model.WishlistItemFormResultData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -97,9 +100,10 @@ data class WishlistsUiViewModelState(
 class WishlistsViewModel @Inject constructor(
     private val getWishlists: GetWishlistsUseCase,
     private val createWishlist: CreateWishlistUseCase,
+    private val deleteWishlists: DeleteWishlistsUseCase,
+    private val updateWishlist: UpdateWishlistUseCase,
     private val addWishlistItem: AddWishlistItemUseCase,
-    private val updateWishlistItem: UpdateWishlistItemUseCase,
-    private val deleteWishlists: DeleteWishlistsUseCase
+    private val updateWishlistItem: UpdateWishlistItemUseCase
 ) : UiViewModel<WishlistsUiState, WishlistsUiViewModelState>(WishlistsUiViewModelState()) {
 
     init {
@@ -131,11 +135,15 @@ class WishlistsViewModel @Inject constructor(
         }
     }
 
-    fun onCreateWishlist(request: NewWishlistRequest) {
+    fun onCreateWishlist(form: WishlistFormResultData) {
         viewModelState.update { state ->
             state.copy(loading = LoadingVisuals.Visible)
         }
         launch {
+            val request = NewWishlistRequest(
+                name = form.name,
+                description = form.description
+            )
             createWishlist(request)
                 .then { wishlist ->
                     viewModelState.update { state ->
@@ -150,6 +158,39 @@ class WishlistsViewModel @Inject constructor(
                         state.copy(
                             loading = LoadingVisuals.Hidden
                             // error = TODO
+                        )
+                    }
+                }
+        }
+    }
+
+    fun onEditWishlist(form: WishlistFormResultData) {
+        viewModelState.update { state ->
+            state.copy(loading = LoadingVisuals.Visible)
+        }
+        launch {
+            val request = UpdateWishlistRequest(
+                wishlist = viewModelState.value.wishlistsSelected.first(),
+                name = form.name,
+                description = form.description
+            )
+            updateWishlist(request)
+                .then { wishlist ->
+                    viewModelState.update { state ->
+                        state.copy(
+                            loading = LoadingVisuals.Hidden,
+                            wishlists = state.wishlists.filter { w ->
+                                w.id != wishlist.id
+                            } + wishlist,
+                            wishlistsSelected = emptyList()
+                        )
+                    }
+                }
+                .catch {
+                    viewModelState.update { state ->
+                        state.copy(
+                            loading = LoadingVisuals.Hidden
+                            // Todo error
                         )
                     }
                 }

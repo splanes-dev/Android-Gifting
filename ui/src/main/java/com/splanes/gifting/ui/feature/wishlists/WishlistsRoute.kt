@@ -7,7 +7,7 @@ import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
 import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
-import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistRequest
+import com.splanes.gifting.ui.feature.wishlists.model.WishlistFormResultData
 import com.splanes.gifting.ui.feature.wishlists.model.WishlistItemFormResultData
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
@@ -17,6 +17,7 @@ fun WishlistsRoute(viewModel: WishlistsViewModel) {
     WishlistsRoute(
         uiState = uiState,
         onCreateWishlist = viewModel::onCreateWishlist,
+        onEditWishlist = viewModel::onEditWishlist,
         onWishlistClick = viewModel::openWishlist,
         onWishlistItemClick = viewModel::openWishlistItem,
         onDeleteWishlistConfirmation = viewModel::onDeleteWishlists,
@@ -35,7 +36,8 @@ fun WishlistsRoute(viewModel: WishlistsViewModel) {
 @Composable
 fun WishlistsRoute(
     uiState: WishlistsUiState,
-    onCreateWishlist: (NewWishlistRequest) -> Unit,
+    onCreateWishlist: (WishlistFormResultData) -> Unit,
+    onEditWishlist: (WishlistFormResultData) -> Unit,
     onCreateWishlistItem: (WishlistItemFormResultData) -> Unit,
     onUpdateWishlistItem: (item: WishlistItem, form: WishlistItemFormResultData) -> Unit,
     onWishlistClick: (Wishlist) -> Unit,
@@ -70,11 +72,12 @@ fun WishlistsRoute(
                     uiState = screenUiState,
                     onSelectWishlist = onSelectWishlist,
                     onUnselectWishlist = onUnselectWishlist,
-                    onDeleteWishlist = onDeleteWishlistConfirmation
+                    onDeleteWishlist = onDeleteWishlistConfirmation,
+                    onEditWishlist = onEditWishlist
                 )
 
             is WishlistsUiState.EmptyWishlistOpen ->
-                EmptyWishlistOpenedScreen(
+                WishlistOpenedEmptyScreen(
                     uiState = screenUiState,
                     onCreateItem = onCreateWishlistItem,
                     onCloseWishlist = onCloseWishlist

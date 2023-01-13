@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.splanes.gifting.domain.feature.list.wishlist.request.NewWishlistRequest
 import com.splanes.gifting.ui.R
 import com.splanes.gifting.ui.common.components.buttons.GiftingButton
 import com.splanes.gifting.ui.common.components.buttons.GiftingTextButton
@@ -30,12 +29,13 @@ import com.splanes.gifting.ui.common.components.spacer.column.Spacer
 import com.splanes.gifting.ui.common.components.spacer.row.Weight
 import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
+import com.splanes.gifting.ui.feature.wishlists.model.WishlistFormResultData
 import kotlinx.coroutines.launch
 
 sealed interface OnWishlistFormButtonClick {
-    class Create(val onCreate: (NewWishlistRequest) -> Unit) : OnWishlistFormButtonClick
+    class Create(val onCreate: (WishlistFormResultData) -> Unit) : OnWishlistFormButtonClick
 
-    class Edit(val onEdit: (/* todo */) -> Unit) : OnWishlistFormButtonClick
+    class Edit(val onEdit: (WishlistFormResultData) -> Unit) : OnWishlistFormButtonClick
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,14 +111,21 @@ fun WishlistForm(
                             when (onButtonClick) {
                                 is OnWishlistFormButtonClick.Create -> {
                                     onButtonClick.onCreate(
-                                        NewWishlistRequest(
+                                        WishlistFormResultData(
                                             name = wishlistNameState.inputValue.text.orEmpty(),
                                             description = wishlistDescriptionState.inputValue.text
                                         )
                                     )
                                 }
 
-                                is OnWishlistFormButtonClick.Edit -> TODO()
+                                is OnWishlistFormButtonClick.Edit -> {
+                                    onButtonClick.onEdit(
+                                        WishlistFormResultData(
+                                            name = wishlistNameState.inputValue.text.orEmpty(),
+                                            description = wishlistDescriptionState.inputValue.text
+                                        )
+                                    )
+                                }
                             }
                         }
                     }
