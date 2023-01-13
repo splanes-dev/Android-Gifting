@@ -231,7 +231,7 @@ class WishlistsViewModel @Inject constructor(
         }
     }
 
-    fun onDeleteWishlistItem(item: WishlistItem) {
+    fun onDeleteWishlistItem(items: List<WishlistItem>) {
         // todo
     }
 
@@ -268,7 +268,12 @@ class WishlistsViewModel @Inject constructor(
     }
 
     fun onCloseWishlist() {
-        viewModelState.update { state -> state.copy(wishlist = null) }
+        viewModelState.update { state ->
+            state.copy(
+                wishlist = null,
+                wishlistItemsSelected = emptyList()
+            )
+        }
     }
 
     fun onCloseWishlistItem() {

@@ -1,5 +1,8 @@
 package com.splanes.gifting.ui.feature.wishlists.components
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,9 +14,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Notes
+import androidx.compose.material.icons.rounded.RadioButtonChecked
+import androidx.compose.material.icons.rounded.RadioButtonUnchecked
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,6 +46,7 @@ import java.text.DecimalFormat
 fun WishlistItemsList(
     items: List<WishlistItem>,
     onItemClick: (WishlistItem) -> Unit,
+    onItemLongClick: (WishlistItem) -> Unit,
     onUrlClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -50,22 +55,75 @@ fun WishlistItemsList(
             WishlistItemContent(
                 item = item,
                 onUrlClick = { item.url?.ifNotBlank(onUrlClick) },
-                onClick = { onItemClick(item) }
+                onClick = { onItemClick(item) },
+                onLongClick = { onItemLongClick(item) }
             )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WishlistItemsListEditing(
+    items: List<WishlistItem>,
+    selected: List<WishlistItem>,
+    onItemClick: (WishlistItem) -> Unit,
+    onUrlClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LazyColumn(modifier = modifier) {
+        items(items) { item ->
+            val isSelected = selected.contains(item)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Spacer(width = 16.dp)
+
+                Crossfade(targetState = isSelected) { itemSelected ->
+                    Icon(
+                        modifier = Modifier.size(24.dp),
+                        imageVector = if (itemSelected) {
+                            Icons.Rounded.RadioButtonChecked
+                        } else {
+                            Icons.Rounded.RadioButtonUnchecked
+                        },
+                        contentDescription = item.name,
+                        tint = colorOf {
+                            if (itemSelected) {
+                                primary
+                            } else {
+                                tertiary.withAlpha(.7)
+                            }
+                        }
+                    )
+                }
+
+                WishlistItemContent(
+                    item,
+                    onClick = { onItemClick(item) },
+                    onUrlClick = { item.url?.ifNotBlank(onUrlClick) },
+                    onLongClick = {}
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun WishlistItemContent(
     item: WishlistItem,
     onUrlClick: () -> Unit,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onLongClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-        onClick = onClick
+        modifier = Modifier
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            )
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         WishlistItemBasicInfo(item)
 
@@ -204,7 +262,8 @@ private fun WishlistItemsListPreview() {
                 )
             ),
             onItemClick = { },
-            onUrlClick = { }
+            onUrlClick = { },
+            onItemLongClick = { }
         )
     }
 }

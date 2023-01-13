@@ -43,7 +43,7 @@ fun WishlistsRoute(
     onWishlistClick: (Wishlist) -> Unit,
     onWishlistItemClick: (WishlistItem) -> Unit,
     onDeleteWishlistConfirmation: (List<Wishlist>) -> Unit,
-    onDeleteWishlistItemConfirmation: (WishlistItem) -> Unit,
+    onDeleteWishlistItemConfirmation: (List<WishlistItem>) -> Unit,
     onSelectWishlist: (Wishlist) -> Unit,
     onUnselectWishlist: (Wishlist) -> Unit,
     onSelectWishlistItem: (WishlistItem) -> Unit,
@@ -88,10 +88,18 @@ fun WishlistsRoute(
                     uiState = screenUiState,
                     onCreateItem = onCreateWishlistItem,
                     onCloseWishlist = onCloseWishlist,
-                    onWishlistItemClick = onWishlistItemClick
+                    onWishlistItemClick = onWishlistItemClick,
+                    onWishlistItemLongClick = onSelectWishlistItem
                 )
 
             is WishlistsUiState.WishlistOpenEditing -> {
+                WishlistOpenedEditScreen(
+                    uiState = screenUiState,
+                    onCloseWishlist = onCloseWishlist,
+                    onSelectWishlistItem = onSelectWishlistItem,
+                    onUnselectWishlistItem = onUnselectWishlistItem,
+                    onDeleteWishlistItems = onDeleteWishlistItemConfirmation
+                )
             }
 
             is WishlistsUiState.WishlistItemOpen ->

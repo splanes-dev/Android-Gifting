@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.DeleteForever
 import androidx.compose.material.icons.rounded.West
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -48,6 +49,7 @@ import com.splanes.gifting.ui.feature.wishlists.components.WishlistForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemEditForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemForm
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemsList
+import com.splanes.gifting.ui.feature.wishlists.components.WishlistItemsListEditing
 import com.splanes.gifting.ui.feature.wishlists.components.WishlistsGrid
 import com.splanes.gifting.ui.feature.wishlists.model.WishlistFormResultData
 import com.splanes.gifting.ui.feature.wishlists.model.WishlistItemFormResultData
@@ -292,6 +294,7 @@ fun WishlistOpenedScreen(
     uiState: WishlistsUiState.WishlistOpen,
     onCreateItem: (WishlistItemFormResultData) -> Unit,
     onWishlistItemClick: (WishlistItem) -> Unit,
+    onWishlistItemLongClick: (WishlistItem) -> Unit,
     onCloseWishlist: () -> Unit
 ) {
     val wishlist = uiState.wishlist
@@ -330,6 +333,7 @@ fun WishlistOpenedScreen(
                             .padding(bottom = 48.dp),
                         items = wishlist.items,
                         onItemClick = onWishlistItemClick,
+                        onItemLongClick = onWishlistItemLongClick,
                         onUrlClick = { url -> context.openUrl(url) }
                     )
 
@@ -341,6 +345,62 @@ fun WishlistOpenedScreen(
                         onClick = { coroutineScope.launch { bottomSheetState.expand() } }
                     )
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun WishlistOpenedEditScreen(
+    uiState: WishlistsUiState.WishlistOpenEditing,
+    onCloseWishlist: () -> Unit,
+    onSelectWishlistItem: (WishlistItem) -> Unit,
+    onUnselectWishlistItem: (WishlistItem) -> Unit,
+    onDeleteWishlistItems: (List<WishlistItem>) -> Unit
+) {
+    val wishlist = uiState.wishlist
+    val context = LocalContext.current
+
+    LoaderScaffold(uiState = uiState) {
+        Scaffold(topBar = {
+            GiftingTopBar(title = wishlist.name, navigationIcon = {
+                GiftingIconButton(
+                    imageVector = Icons.Rounded.West,
+                    tint = colorOf { onPrimaryContainer },
+                    onClick = onCloseWishlist
+                )
+            })
+        }) { innerPaddings ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPaddings)
+            ) {
+                WishlistItemsListEditing(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 48.dp),
+                    items = wishlist.items,
+                    selected = uiState.itemsSelected,
+                    onItemClick = { item ->
+                        if (uiState.itemsSelected.contains(item)) {
+                            onUnselectWishlistItem(item)
+                        } else {
+                            onSelectWishlistItem(item)
+                        }
+                    },
+                    onUrlClick = context::openUrl
+                )
+
+                GiftingButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 16.dp),
+                    text = stringResource(id = R.string.delete),
+                    leadingIcon = Icons.Rounded.DeleteForever,
+                    onClick = { onDeleteWishlistItems(uiState.itemsSelected) }
+                )
             }
         }
     }
