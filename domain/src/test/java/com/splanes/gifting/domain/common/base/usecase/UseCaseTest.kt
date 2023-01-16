@@ -13,7 +13,7 @@ import org.junit.Test
 @OptIn(ExperimentalCoroutinesApi::class)
 class UseCaseTest {
 
-    private class DummyUseCase() : UseCase<String, Int>() {
+    private class DummyUseCase : UseCase<String, Int>() {
         override suspend fun execute(request: String): Int =
             request.toInt()
     }

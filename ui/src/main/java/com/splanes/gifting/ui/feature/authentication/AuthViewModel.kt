@@ -14,6 +14,8 @@ import com.splanes.gifting.ui.common.uistate.UiViewModel
 import com.splanes.gifting.ui.common.uistate.UiViewModelState
 import com.splanes.gifting.ui.feature.authentication.model.OnBoardingUiPage
 import com.splanes.gifting.ui.feature.authentication.model.OnBoardingUiPages
+import com.splanes.gifting.ui.feature.authentication.model.SignInFormData
+import com.splanes.gifting.ui.feature.authentication.model.SignUpFormData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -139,14 +141,14 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signIn(email: String, password: String, remember: Boolean) {
+    fun signIn(form: SignInFormData) {
         launch {
             viewModelState.update { state -> state.copy(loading = LoadingVisuals.Visible) }
             signIn(
                 SignInRequest(
-                    email = email,
-                    password = password,
-                    autoSignIn = remember
+                    email = form.email,
+                    password = form.password,
+                    autoSignIn = form.autoSignIn
                 )
             ).then {
                 _authSideEffect.update { AuthUiSideEffect.NavToDashboard }
@@ -161,15 +163,15 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signUp(username: String, email: String, password: String, remember: Boolean) {
+    fun signUp(form: SignUpFormData) {
         launch {
             viewModelState.update { state -> state.copy(loading = LoadingVisuals.Visible) }
             signUp(
                 SignUpRequest(
-                    username = username,
-                    email = email,
-                    password = password,
-                    autoSignIn = remember
+                    username = form.username,
+                    email = form.email,
+                    password = form.password,
+                    autoSignIn = form.autoSignIn
                 )
             ).then {
                 _authSideEffect.update { AuthUiSideEffect.NavToDashboard }

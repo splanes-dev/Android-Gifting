@@ -28,6 +28,8 @@ import com.splanes.gifting.ui.R
 import com.splanes.gifting.ui.common.utils.color.colorOf
 import com.splanes.gifting.ui.common.utils.color.withAlpha
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
+import com.splanes.gifting.ui.feature.profile.ProfileRoute
+import com.splanes.gifting.ui.feature.profile.ProfileViewModel
 import com.splanes.gifting.ui.feature.wishlists.WishlistsRoute
 import com.splanes.gifting.ui.feature.wishlists.WishlistsViewModel
 
@@ -54,6 +56,8 @@ fun DashboardNavGraph(
             composable(DashboardDestinations.GroupLists) {
             }
             composable(DashboardDestinations.Profile) {
+                val viewModel: ProfileViewModel = hiltViewModel()
+                ProfileRoute(viewModel)
             }
             composable(DashboardDestinations.InvisibleFriend) {
             }

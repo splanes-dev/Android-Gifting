@@ -30,6 +30,7 @@ import com.splanes.gifting.ui.common.components.spacer.column.Weight
 import com.splanes.gifting.ui.common.components.spacer.row.Weight
 import com.splanes.gifting.ui.common.utils.remember.rememberStateOf
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
+import com.splanes.gifting.ui.feature.authentication.model.SignInFormData
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,7 +39,7 @@ fun ColumnScope.SignInForm(
     email: String,
     password: String,
     autoSignIn: Boolean,
-    onSignIn: (String, String, Boolean) -> Unit
+    onSignIn: (SignInFormData) -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
     val emailState = rememberTextInputState(email)
@@ -104,11 +105,12 @@ fun ColumnScope.SignInForm(
                 if (emailState.validate(emailValidators) &&
                     passwordState.validate(passwordValidators)
                 ) {
-                    onSignIn(
-                        emailState.inputValue.text.orEmpty(),
-                        passwordState.inputValue.text.orEmpty(),
-                        rememberMeState
+                    val form = SignInFormData(
+                        email = emailState.inputValue.text.orEmpty(),
+                        password = passwordState.inputValue.text.orEmpty(),
+                        autoSignIn = rememberMeState
                     )
+                    onSignIn(form)
                 }
             }
         }

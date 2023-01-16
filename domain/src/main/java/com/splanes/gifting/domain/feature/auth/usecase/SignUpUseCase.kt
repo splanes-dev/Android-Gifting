@@ -28,6 +28,8 @@ class SignUpUseCase @Inject constructor(
                     AuthStateValue.SignIn
                 }
             )
+        } else {
+            repository.updateAuthStateValue(AuthStateValue.SignIn)
         }
     }
 }

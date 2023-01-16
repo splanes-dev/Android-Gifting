@@ -38,12 +38,14 @@ import com.splanes.gifting.ui.feature.authentication.components.OnBoardingPagerP
 import com.splanes.gifting.ui.feature.authentication.components.SignInForm
 import com.splanes.gifting.ui.feature.authentication.components.SignUpForm
 import com.splanes.gifting.ui.feature.authentication.model.OnBoardingUiPages
+import com.splanes.gifting.ui.feature.authentication.model.SignInFormData
+import com.splanes.gifting.ui.feature.authentication.model.SignUpFormData
 import com.splanes.gifting.ui.theme.GiftingTheme
 
 @Composable
 fun AuthSignUpScreen(
     uiState: AuthUiState.SignUp,
-    onSignUp: (String, String, String, Boolean) -> Unit
+    onSignUp: (SignUpFormData) -> Unit
 ) {
     LoaderScaffold(uiState = uiState) {
         Column(
@@ -96,7 +98,7 @@ fun AuthLandingScreen() {
 @Composable
 fun AuthSignInScreen(
     uiState: AuthUiState.SignIn,
-    onSignIn: (String, String, Boolean) -> Unit
+    onSignIn: (SignInFormData) -> Unit
 ) {
     LoaderScaffold(uiState = uiState) {
         Column(
@@ -187,7 +189,7 @@ fun PreviewAuthSignUpScreen() {
                 password = "",
                 username = ""
             ),
-            onSignUp = { _, _, _, _ -> }
+            onSignUp = { }
         )
     }
 }
@@ -205,7 +207,7 @@ fun PreviewAuthSignInScreen() {
                 email = "",
                 password = ""
             ),
-            onSignIn = { _, _, _ -> }
+            onSignIn = { }
         )
     }
 }

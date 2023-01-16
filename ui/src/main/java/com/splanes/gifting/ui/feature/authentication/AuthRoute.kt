@@ -6,6 +6,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.splanes.gifting.ui.feature.authentication.model.SignInFormData
+import com.splanes.gifting.ui.feature.authentication.model.SignUpFormData
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -37,8 +39,8 @@ fun AuthRoute(
 @Composable
 fun AuthRoute(
     uiState: AuthUiState,
-    onSignIn: (String, String, Boolean) -> Unit,
-    onSignUp: (String, String, String, Boolean) -> Unit,
+    onSignIn: (SignInFormData) -> Unit,
+    onSignUp: (SignUpFormData) -> Unit,
     onOnBoardingEnd: () -> Unit
 ) {
     Crossfade(uiState) { screenUiState ->
