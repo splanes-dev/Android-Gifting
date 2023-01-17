@@ -14,6 +14,8 @@ interface AuthRepository {
 
     suspend fun signUp(signUpRequest: SignUpRequest): String
 
+    suspend fun storeUser(signUpRequest: SignUpRequest): Boolean
+
     suspend fun storeCredentials(credentials: AuthCredentials): Boolean
 
     suspend fun getStoredCredentials(): AuthCredentials?

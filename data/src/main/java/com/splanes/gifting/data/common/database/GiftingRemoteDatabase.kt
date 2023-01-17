@@ -22,4 +22,8 @@ class GiftingRemoteDatabase @Inject constructor(
         get() = database.reference
             .child(uid)
             .child("tags")
+
+    val usersRef
+        get() = database.reference
+            .child("usr")
 }

@@ -1,6 +1,7 @@
 package com.splanes.gifting.domain.feature.auth.usecase
 
 import com.splanes.gifting.domain.common.base.usecase.UseCase
+import com.splanes.gifting.domain.common.error.SignUpException
 import com.splanes.gifting.domain.feature.auth.AuthRepository
 import com.splanes.gifting.domain.feature.auth.model.AuthCredentials
 import com.splanes.gifting.domain.feature.auth.model.AuthStateValue
@@ -13,6 +14,11 @@ class SignUpUseCase @Inject constructor(
 
     override suspend fun execute(request: SignUpRequest) {
         val uid = repository.signUp(request)
+
+        if (!repository.storeUser(request)) {
+            throw SignUpException
+        }
+
         if (request.autoSignIn) {
             val storeSuccess = repository.storeCredentials(
                 AuthCredentials(
