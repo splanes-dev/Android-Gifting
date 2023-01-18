@@ -32,7 +32,9 @@ fun AuthRoute(
         uiState = uiState,
         onSignIn = viewModel::signIn,
         onSignUp = viewModel::signUp,
-        onOnBoardingEnd = viewModel::onOnBoardingEnd
+        onOnBoardingEnd = viewModel::onOnBoardingEnd,
+        onNavToSignIn = viewModel::onNavToSignIn,
+        onNavToSignUp = viewModel::onNavToSignUp
     )
 }
 
@@ -41,13 +43,15 @@ fun AuthRoute(
     uiState: AuthUiState,
     onSignIn: (SignInFormData) -> Unit,
     onSignUp: (SignUpFormData) -> Unit,
-    onOnBoardingEnd: () -> Unit
+    onOnBoardingEnd: () -> Unit,
+    onNavToSignIn: () -> Unit,
+    onNavToSignUp: () -> Unit
 ) {
     Crossfade(uiState) { screenUiState ->
         when (screenUiState) {
             AuthUiState.Landing -> AuthLandingScreen()
-            is AuthUiState.SignIn -> AuthSignInScreen(screenUiState, onSignIn)
-            is AuthUiState.SignUp -> AuthSignUpScreen(screenUiState, onSignUp)
+            is AuthUiState.SignIn -> AuthSignInScreen(screenUiState, onSignIn, onNavToSignUp)
+            is AuthUiState.SignUp -> AuthSignUpScreen(screenUiState, onSignUp, onNavToSignIn)
             is AuthUiState.SignUpWithOnBoarding ->
                 AuthOnBoardingScreen(screenUiState, onOnBoardingEnd)
         }

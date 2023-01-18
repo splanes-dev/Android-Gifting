@@ -4,6 +4,8 @@
     <string name="sign_in">Sign in</string>
     <string name="sign_me_up">Sign me up</string>
     <string name="sign_me_in">Sign me in</string>
+    <string name="sign_up_to_sign_in">Already have account? Sign in</string>
+    <string name="sign_in_to_sign_up">Don\'t have account? Register</string>
     <string name="remember_me">Remember me</string>
     <string name="sign_in_progress">Authenticating…</string>
 </resources>

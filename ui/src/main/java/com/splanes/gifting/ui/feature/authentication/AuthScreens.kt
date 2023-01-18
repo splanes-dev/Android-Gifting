@@ -25,6 +25,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.splanes.gifting.ui.R
+import com.splanes.gifting.ui.common.components.buttons.GiftingTextButton
 import com.splanes.gifting.ui.common.components.loader.LoaderScaffold
 import com.splanes.gifting.ui.common.components.spacer.column.Spacer
 import com.splanes.gifting.ui.common.components.spacer.column.Weight
@@ -45,7 +46,8 @@ import com.splanes.gifting.ui.theme.GiftingTheme
 @Composable
 fun AuthSignUpScreen(
     uiState: AuthUiState.SignUp,
-    onSignUp: (SignUpFormData) -> Unit
+    onSignUp: (SignUpFormData) -> Unit,
+    onNavToSignIn: () -> Unit
 ) {
     LoaderScaffold(uiState = uiState) {
         Column(
@@ -75,6 +77,13 @@ fun AuthSignUpScreen(
                 onSignUp = onSignUp
             )
 
+            Spacer(height = 16.dp)
+
+            GiftingTextButton(
+                text = stringResource(id = R.string.sign_up_to_sign_in),
+                onClick = onNavToSignIn
+            )
+
             Spacer(24.dp)
         }
     }
@@ -98,7 +107,8 @@ fun AuthLandingScreen() {
 @Composable
 fun AuthSignInScreen(
     uiState: AuthUiState.SignIn,
-    onSignIn: (SignInFormData) -> Unit
+    onSignIn: (SignInFormData) -> Unit,
+    onNavToSignUp: () -> Unit
 ) {
     LoaderScaffold(uiState = uiState) {
         Column(
@@ -125,6 +135,13 @@ fun AuthSignInScreen(
                 password = uiState.password,
                 autoSignIn = false,
                 onSignIn = onSignIn
+            )
+
+            Spacer(16.dp)
+
+            GiftingTextButton(
+                text = stringResource(id = R.string.sign_in_to_sign_up),
+                onClick = onNavToSignUp
             )
 
             Spacer(24.dp)
@@ -189,7 +206,8 @@ fun PreviewAuthSignUpScreen() {
                 password = "",
                 username = ""
             ),
-            onSignUp = { }
+            onSignUp = { },
+            onNavToSignIn = { }
         )
     }
 }
@@ -207,7 +225,8 @@ fun PreviewAuthSignInScreen() {
                 email = "",
                 password = ""
             ),
-            onSignIn = { }
+            onSignIn = { },
+            onNavToSignUp = { }
         )
     }
 }

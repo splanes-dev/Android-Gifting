@@ -191,4 +191,16 @@ class AuthViewModel @Inject constructor(
             state.copy(onBoardingPages = emptyList())
         }
     }
+
+    fun onNavToSignIn() {
+        viewModelState.update { state ->
+            state.copy(isSignedUp = true)
+        }
+    }
+
+    fun onNavToSignUp() {
+        viewModelState.update { state ->
+            state.copy(isSignedUp = false)
+        }
+    }
 }
