@@ -1,7 +1,3 @@
-// Remove `@file:Suppress("UnstableApiUsage")` once Version Catalogs has had released as @Stable
-@file:Suppress("UnstableApiUsage")
-
-enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
