@@ -1,47 +1,46 @@
 package com.splanes.gifting.ui.common.components.pagerindicator
 
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.PagerState
 import com.splanes.gifting.ui.common.components.spacer.row.Spacer
-import kotlin.math.abs
+import com.splanes.gifting.ui.common.utils.color.withAlpha
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PagerIndicators(
     pagerState: PagerState,
+    modifier: Modifier = Modifier,
     indicatorColor: Color = Color.Black
 ) {
-    Row {
-        val offsetIntPart = pagerState.currentPageOffset.toInt()
-        val offsetFractionalPart = pagerState.currentPageOffset - offsetIntPart
-        val currentPage = pagerState.currentPage + offsetIntPart
-        val targetPage = if (pagerState.currentPageOffset < 0) currentPage - 1 else currentPage + 1
-        val currentPageWidth =
-            baseWidth * (1 + (1 - abs(offsetFractionalPart)) * MULTIPLIER_SELECTED_PAGE)
-        val targetPageWidth = baseWidth * (1 + abs(offsetFractionalPart) * MULTIPLIER_SELECTED_PAGE)
-
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
+    ) {
         repeat(pagerState.pageCount) { index ->
-            val width = when (index) {
-                currentPage -> currentPageWidth
-                targetPage -> targetPageWidth
-                else -> baseWidth
+            val isSelected = pagerState.currentPage == index
+            val bulletSize by animateDpAsState(targetValue = if (isSelected) 12.dp else 8.dp)
+
+            Box {
+                Surface(
+                    modifier = Modifier.size(bulletSize),
+                    color = indicatorColor.apply { if (!isSelected) withAlpha(.5) },
+                    shape = RoundedCornerShape(20.dp)
+                ) {}
             }
-            Surface(
-                modifier = Modifier
-                    .width(width)
-                    .height(height),
-                color = indicatorColor,
-                shape = RoundedCornerShape(20.dp)
-            ) {}
             if (index != pagerState.pageCount - 1) {
                 Spacer(spacing)
             }
@@ -49,7 +48,4 @@ fun PagerIndicators(
     }
 }
 
-private const val MULTIPLIER_SELECTED_PAGE = 4
-private val baseWidth = 8.dp
-private val spacing = 10.dp
-private val height = 8.dp
+private val spacing = 12.dp
