@@ -14,7 +14,9 @@ interface AuthRepository {
 
     suspend fun signUp(signUpRequest: SignUpRequest): String
 
-    suspend fun storeUser(signUpRequest: SignUpRequest): Boolean
+    suspend fun updateUserProfile(username: String): Boolean
+
+    suspend fun updatePassword(password: String): Boolean
 
     suspend fun storeCredentials(credentials: AuthCredentials): Boolean
 

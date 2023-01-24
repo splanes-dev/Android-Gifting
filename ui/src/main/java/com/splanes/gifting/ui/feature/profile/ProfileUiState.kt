@@ -7,6 +7,11 @@ import com.splanes.gifting.ui.common.uistate.UiState
 
 sealed interface ProfileUiState : UiState {
 
+    data class ProfileEmpty(
+        override val loading: LoadingVisuals,
+        override val error: ErrorVisuals
+    ) : ProfileUiState
+
     data class ProfileInfo(
         override val loading: LoadingVisuals,
         override val error: ErrorVisuals,

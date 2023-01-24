@@ -10,6 +10,7 @@
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
     <string name="username">Username</string>
+    <string name="reload">Reload</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="category_picker_title">Categories</string>

@@ -52,7 +52,8 @@ fun TextInput(
     state: TextInputState,
     visuals: TextInputVisuals,
     modifier: Modifier = Modifier,
-    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors()
+    colors: TextFieldColors = TextFieldDefaults.outlinedTextFieldColors(),
+    enabled: Boolean = true
 ) {
     val inputValue = state.inputValue
     val coroutineScope = rememberCoroutineScope()
@@ -144,7 +145,8 @@ fun TextInput(
             colors = colors,
             keyboardOptions = visuals.keyboardOptions(),
             singleLine = true,
-            isError = inputValue is TextInputValue.Error
+            isError = inputValue is TextInputValue.Error,
+            enabled = enabled
         )
         AnimatedVisibility(
             visible = inputValue is TextInputValue.Error,

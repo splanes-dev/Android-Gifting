@@ -1,17 +1,17 @@
 package com.splanes.gifting.data.feature.auth.datasource.impl
 
 import com.google.firebase.auth.FirebaseAuth
-import com.splanes.gifting.data.common.database.GiftingRemoteDatabase
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.splanes.gifting.data.common.utils.task.awaitIsSuccessful
 import com.splanes.gifting.data.common.utils.task.awaitOrThrow
+import com.splanes.gifting.data.common.utils.user.userOrThrow
 import com.splanes.gifting.data.feature.auth.datasource.AuthRemoteDataSource
 import com.splanes.gifting.domain.common.error.SignInException
 import com.splanes.gifting.domain.common.error.SignUpException
 import javax.inject.Inject
 
 class AuthRemoteDataSourceImpl @Inject constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val database: GiftingRemoteDatabase
+    private val firebaseAuth: FirebaseAuth
 ) : AuthRemoteDataSource {
 
     override suspend fun signUp(email: String, password: String): String {
@@ -28,10 +28,21 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         return result.user?.uid ?: throw SignInException
     }
 
-    override suspend fun storeUser(emailHash: String, username: String): Boolean =
-        database
-            .usersRef
-            .child(emailHash)
-            .setValue(username)
+    override suspend fun updateUsername(username: String): Boolean {
+        val request = UserProfileChangeRequest
+            .Builder()
+            .apply { displayName = username }
+            .build()
+
+        return firebaseAuth
+            .currentUser
+            ?.updateProfile(request)
+            ?.awaitIsSuccessful() ?: false
+    }
+
+    override suspend fun updatePassword(password: String): Boolean =
+        firebaseAuth
+            .userOrThrow()
+            .updatePassword(password)
             .awaitIsSuccessful()
 }

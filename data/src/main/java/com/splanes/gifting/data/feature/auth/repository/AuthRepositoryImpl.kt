@@ -1,6 +1,5 @@
 package com.splanes.gifting.data.feature.auth.repository
 
-import com.splanes.gifting.data.common.utils.hash.md5
 import com.splanes.gifting.data.feature.auth.datasource.AuthLocalDataSource
 import com.splanes.gifting.data.feature.auth.datasource.AuthRemoteDataSource
 import com.splanes.gifting.data.feature.auth.entity.mapper.AuthCredentialsMapper
@@ -35,9 +34,14 @@ class AuthRepositoryImpl @Inject constructor(
             authRemoteDataSource.signUp(signUpRequest.email, signUpRequest.password)
         }
 
-    override suspend fun storeUser(signUpRequest: SignUpRequest): Boolean =
+    override suspend fun updateUserProfile(username: String): Boolean =
         withContext(Dispatchers.IO) {
-            authRemoteDataSource.storeUser(signUpRequest.email.md5(), signUpRequest.username)
+            authRemoteDataSource.updateUsername(username)
+        }
+
+    override suspend fun updatePassword(password: String): Boolean =
+        withContext(Dispatchers.IO) {
+            authRemoteDataSource.updatePassword(password)
         }
 
     override suspend fun signIn(signInRequest: SignInRequest): String =

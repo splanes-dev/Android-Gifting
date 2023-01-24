@@ -6,5 +6,7 @@ interface AuthRemoteDataSource {
 
     suspend fun signIn(email: String, password: String): String
 
-    suspend fun storeUser(emailHash: String, username: String): Boolean
+    suspend fun updateUsername(username: String): Boolean
+
+    suspend fun updatePassword(password: String): Boolean
 }

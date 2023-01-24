@@ -6,28 +6,32 @@ import com.splanes.gifting.domain.feature.auth.AuthRepository
 import com.splanes.gifting.domain.feature.auth.model.AuthCredentials
 import com.splanes.gifting.domain.feature.auth.model.AuthStateValue
 import com.splanes.gifting.domain.feature.auth.request.SignUpRequest
+import com.splanes.gifting.domain.feature.profile.ProfileRepository
 import javax.inject.Inject
 
 class SignUpUseCase @Inject constructor(
-    private val repository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val profileRepository: ProfileRepository
 ) : UseCase<SignUpRequest, Unit>() {
 
     override suspend fun execute(request: SignUpRequest) {
-        val uid = repository.signUp(request)
+        val uid = authRepository.signUp(request)
+        val isUserProfileUpdated = authRepository.updateUserProfile(request.username)
+        val isUsernameStored = profileRepository.insertOrUpdateUsername(request.username)
 
-        if (!repository.storeUser(request)) {
+        if (!isUserProfileUpdated || !isUsernameStored) {
             throw SignUpException
         }
 
         if (request.autoSignIn) {
-            val storeSuccess = repository.storeCredentials(
+            val storeSuccess = authRepository.storeCredentials(
                 AuthCredentials(
                     uid = uid,
                     email = request.email,
                     password = request.password
                 )
             )
-            repository.updateAuthStateValue(
+            authRepository.updateAuthStateValue(
                 if (storeSuccess) {
                     AuthStateValue.AutoSignIn
                 } else {
@@ -35,7 +39,7 @@ class SignUpUseCase @Inject constructor(
                 }
             )
         } else {
-            repository.updateAuthStateValue(AuthStateValue.SignIn)
+            authRepository.updateAuthStateValue(AuthStateValue.SignIn)
         }
     }
 }
