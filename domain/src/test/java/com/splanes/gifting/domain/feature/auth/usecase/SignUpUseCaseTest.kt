@@ -4,6 +4,7 @@ import com.splanes.gifting.domain.feature.auth.AuthRepository
 import com.splanes.gifting.domain.feature.auth.model.AuthCredentials
 import com.splanes.gifting.domain.feature.auth.model.AuthStateValue
 import com.splanes.gifting.domain.feature.auth.request.SignUpRequest
+import com.splanes.gifting.domain.feature.profile.ProfileRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -13,11 +14,15 @@ import org.junit.Test
 
 class SignUpUseCaseTest {
 
+    private val profileRepository: ProfileRepository = mockk {
+        coEvery { insertOrUpdateUsername(any()) } returns true
+    }
     private val authRepository: AuthRepository = mockk {
         coEvery { signUp(any()) } returns UID
+        coEvery { updateUserProfile(any()) } returns true
         coEvery { storeCredentials(any()) } returns true
     }
-    private val signUpUseCase = SignUpUseCase(authRepository)
+    private val signUpUseCase = SignUpUseCase(authRepository, profileRepository)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
