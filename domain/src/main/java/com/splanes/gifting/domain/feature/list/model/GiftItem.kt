@@ -5,7 +5,7 @@ interface GiftItem {
     val owner: String
     val name: String
     val description: String?
-    val price: Double?
+    val price: GiftPrice?
     val url: String?
     val addedOn: Long?
     val tags: List<ItemTag>

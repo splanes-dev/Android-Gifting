@@ -1,5 +1,6 @@
 package com.splanes.gifting.data.feature.list.wishlist.entity.mapper
 
+import com.splanes.gifting.data.feature.list.entity.mapper.GiftPriceMapper
 import com.splanes.gifting.data.feature.list.wishlist.entity.WishlistDto
 import com.splanes.gifting.data.feature.list.wishlist.entity.WishlistItemDto
 import com.splanes.gifting.data.feature.tag.entity.ItemTagDto
@@ -10,7 +11,10 @@ import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
 import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
 import javax.inject.Inject
 
-class WishlistMapper @Inject constructor(private val tagMapper: ItemTagMapper) {
+class WishlistMapper @Inject constructor(
+    private val tagMapper: ItemTagMapper,
+    private val priceMapper: GiftPriceMapper
+) {
 
     fun map(dto: WishlistDto, tags: List<ItemTagDto> = emptyList()): Wishlist =
         Wishlist(
@@ -42,7 +46,7 @@ class WishlistMapper @Inject constructor(private val tagMapper: ItemTagMapper) {
             name = dto.name.orEmpty(),
             addedOn = dto.createdOn ?: 0L,
             description = dto.description,
-            price = dto.price,
+            price = dto.price?.let(priceMapper::map),
             url = dto.url,
             tags = tags.filter { tag ->
                 dto.tags.orEmpty().contains(tag.id)
@@ -59,7 +63,7 @@ class WishlistMapper @Inject constructor(private val tagMapper: ItemTagMapper) {
             name = item.name,
             description = item.description,
             createdOn = item.addedOn,
-            price = item.price,
+            price = item.price?.let(priceMapper::map),
             url = item.url,
             tags = item.tags.map { tag -> tag.id },
             notes = item.notes,

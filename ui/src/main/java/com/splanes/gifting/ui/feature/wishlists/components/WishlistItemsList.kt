@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.splanes.gifting.domain.feature.list.model.GiftCategory
+import com.splanes.gifting.domain.feature.list.model.GiftPrice
 import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
 import com.splanes.gifting.ui.R
 import com.splanes.gifting.ui.common.components.buttons.GiftingTextButton
@@ -40,7 +41,6 @@ import com.splanes.gifting.ui.common.utils.giftcategory.icon
 import com.splanes.gifting.ui.common.utils.primitives.ifNotBlank
 import com.splanes.gifting.ui.common.utils.typography.textStyleOf
 import com.splanes.gifting.ui.theme.GiftingTheme
-import java.text.DecimalFormat
 
 @Composable
 fun WishlistItemsList(
@@ -219,7 +219,7 @@ private fun WishlistItemBasicInfo(item: WishlistItem) {
 
         item.price?.let { price ->
             Text(
-                text = DecimalFormat("0.##€").format(price),
+                text = price.formatted,
                 style = textStyleOf { headlineMedium }
             )
         }
@@ -251,7 +251,7 @@ private fun WishlistItemsListPreview() {
                     id = "",
                     name = "Item3",
                     description = "Item 3 description",
-                    price = 89.99,
+                    price = GiftPrice.Exact(89.99),
                     categories = listOf(
                         GiftCategory.Books,
                         GiftCategory.Kids,

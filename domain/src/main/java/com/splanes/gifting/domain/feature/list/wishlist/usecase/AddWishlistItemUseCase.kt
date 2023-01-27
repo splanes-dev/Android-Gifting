@@ -3,6 +3,7 @@ package com.splanes.gifting.domain.feature.list.wishlist.usecase
 import com.splanes.gifting.domain.common.base.usecase.UseCase
 import com.splanes.gifting.domain.common.utils.timestamp
 import com.splanes.gifting.domain.common.utils.uuid
+import com.splanes.gifting.domain.feature.list.model.GiftPrice
 import com.splanes.gifting.domain.feature.list.wishlist.WishlistRepository
 import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
 import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
@@ -21,7 +22,7 @@ class AddWishlistItemUseCase @Inject constructor(
             name = request.name,
             addedOn = timestamp(),
             description = request.description,
-            price = request.price,
+            price = request.price?.let { price -> GiftPrice.Exact(price) },
             url = request.url,
             tags = request.tags,
             notes = request.notes,

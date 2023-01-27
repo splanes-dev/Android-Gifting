@@ -1,5 +1,6 @@
 package com.splanes.gifting.ui.feature.wishlists
 
+import com.splanes.gifting.domain.feature.list.model.GiftPrice
 import com.splanes.gifting.domain.feature.list.wishlist.model.Wishlist
 import com.splanes.gifting.domain.feature.list.wishlist.model.WishlistItem
 import com.splanes.gifting.domain.feature.list.wishlist.request.DeleteWishlistItemsRequest
@@ -363,7 +364,7 @@ class WishlistsViewModel @Inject constructor(
                     item = item.copy(
                         name = form.name,
                         description = form.description,
-                        price = form.price,
+                        price = form.price?.let { price -> GiftPrice.Exact(price) },
                         url = form.url,
                         categories = form.categories,
                         tags = form.tags,
